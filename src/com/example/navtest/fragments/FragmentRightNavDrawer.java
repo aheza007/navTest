@@ -124,7 +124,7 @@ public class FragmentRightNavDrawer extends Fragment {
 			rightRecyclerView.setAdapter(myGridAdapter);
 			mLinearLayoutManager = new LinearLayoutManager(getActivity());
 			rightRecyclerViewList.setLayoutManager(mLinearLayoutManager);
-			myListAdapter = new ListRecyclerAdapter(feedProviders);
+			myListAdapter = new ListRecyclerAdapter(this.getActivity(),feedProviders);
 			//rightRecyclerViewList.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 			myGridAdapter.setOnGridItemClickLister(new OnGridItemClickListener() {
 

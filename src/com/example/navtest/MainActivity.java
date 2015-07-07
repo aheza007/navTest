@@ -1,9 +1,13 @@
 package com.example.navtest;
 
+import java.util.HashSet;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -38,6 +42,8 @@ import com.google.android.gms.plus.model.people.Person;
 public class MainActivity extends ActionBarActivity implements
 		FragmentDrawerListener, OnClickListener, ConnectionCallbacks,
 		OnConnectionFailedListener {
+	
+	public static final String FAVORITE_NEWS = "FAVORITE_NEWS";
 	private static final int RC_SIGN_IN = 0;
 	private static final int PROFILE_PIC_SIZE = 400;
 	private static final String TAG = null;
@@ -53,7 +59,8 @@ public class MainActivity extends ActionBarActivity implements
 	// Active Session in a way that is similar to Android UI lifecycles.
 	public UiLifecycleHelper uiHelper;
 	private Object FacebookSdk;
-
+	
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,7 +72,7 @@ public class MainActivity extends ActionBarActivity implements
 		getSupportActionBar().setTitle("");
 		drawerFragment = (FragmentLeftDrawer) getSupportFragmentManager()
 				.findFragmentById(R.id.fragment_left_drawer);
-
+		
 		// Now retrieve the DrawerLayout so that we can set the status bar
 		// color.
 		// This only takes effect on Lollipop, or when using
@@ -80,6 +87,11 @@ public class MainActivity extends ActionBarActivity implements
 				.addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this).addApi(Plus.API)
 				.addScope(Plus.SCOPE_PLUS_LOGIN).build();
+		SharedPreferences sharedPref=PreferenceManager.getDefaultSharedPreferences(this);
+		if(!sharedPref.contains(FAVORITE_NEWS)){
+			SharedPreferences.Editor editor=sharedPref.edit();
+			editor.putStringSet(FAVORITE_NEWS, new HashSet<String>()).apply();
+		}		
 		displayView(0);
 		updateUI(logedIn);
 	}

@@ -43,7 +43,7 @@ public class FragmentLeftDrawer extends Fragment {
 	private SignInButton btnSignIn;
 	private LoginButton loginButton;
 	LinearLayout not_logged_in;
-	RelativeLayout logged_in;
+	LinearLayout logged_in;
 	RelativeLayout progress_bar_layout;
 	ProgressBar progress;
 
@@ -132,7 +132,7 @@ public class FragmentLeftDrawer extends Fragment {
 		if (progress_bar_layout != null
 				&& progress_bar_layout.VISIBLE == View.VISIBLE)
 			progress_bar_layout.setVisibility(View.INVISIBLE);
-		logged_in = (RelativeLayout) containerView.findViewById(R.id.logged_in);
+		logged_in = (LinearLayout) containerView.findViewById(R.id.logged_in);
 		ImageView profile_image = (ImageView) containerView
 				.findViewById(R.id.profile_image);
 		TextView profile_name = (TextView) containerView

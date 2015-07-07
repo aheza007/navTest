@@ -5,7 +5,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -14,6 +13,7 @@ import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.Syn
 import com.google.code.rome.android.repackaged.com.sun.syndication.io.FeedException;
 import com.google.code.rome.android.repackaged.com.sun.syndication.io.SyndFeedInput;
 import com.google.code.rome.android.repackaged.com.sun.syndication.io.XmlReader;
+import com.google.code.rome.android.repackaged.com.sun.syndication.io.XmlReaderException;
 
 public class GetRSSFeedTask extends AsyncTask<String, Integer, SyndFeed> {
 
@@ -33,13 +33,15 @@ public class GetRSSFeedTask extends AsyncTask<String, Integer, SyndFeed> {
 
 		super.onPreExecute();
 		dialog = new ProgressDialog(mActivty);
-		dialog.setMessage("Loading...");
-		dialog.show();
+		if (dialog != null) {
+			dialog.setMessage("Loading...");
+			dialog.show();
+		}
 	}
 
 	protected void onPostExecute(SyndFeed result) {
 		super.onPostExecute(result);
-		
+
 		dialog.dismiss();
 		mFragmentFeedList.setAdapter(result);
 	}
@@ -53,14 +55,15 @@ public class GetRSSFeedTask extends AsyncTask<String, Integer, SyndFeed> {
 
 	private SyndFeed getRSS(String rss) {
 
-		URL feedUrl;
+		URL feedUrl = null;
 		SyndFeed feed = null;
 		try {
 			Log.d("DEBUG", "Entered:" + rss);
 			feedUrl = new URL(rss);
-
+			Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 			SyndFeedInput input = new SyndFeedInput();
-			feed = input.build(new XmlReader(feedUrl));
+			XmlReader reader=new XmlReader(feedUrl);
+			feed = input.build(reader);
 
 			// return feed;
 
@@ -69,6 +72,8 @@ public class GetRSSFeedTask extends AsyncTask<String, Integer, SyndFeed> {
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (FeedException e) {
+			e.printStackTrace();
+		} catch (XmlReaderException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
