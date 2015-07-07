@@ -1,0 +1,90 @@
+{"categories":[
+	{"News":[
+		{"providername":"CNN", "link":"http://rss.cnn.com/rss/edition.rss"},
+		{"providername":"BBC News", "link":"http://feeds.bbci.co.uk/news/rss.xml"},
+		{"providername":"Yahoo News","link":"http://news.yahoo.com/rss/"},
+        {"providername":"ABC News", "link":"http://feeds.abcnews.com/abcnews/topstories"},
+        {"providername":"The New York Times", "link":"http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"},
+        {"providername":"Fox News", "link":"http://feeds.foxnews.com/foxnews/latest"},
+        {"providername":"Reuters", "link":"http://feeds.reuters.com/reuters/topNews"},
+        {"providername":"Top Stories-Google News", "link":"https://news.google.com/news?pz=1&cf=all&ned=us&hl=en&output=rss"},
+        {"providername":"Time", "link":"http://feeds2.feedburner.com/time/topstories"},
+        {"providername":"Inyarwanda", "link":"http://inyarwanda.com/articles/index.rss"},
+        {"providername":"KigaliToday", "link":"http://feeds.feedburner.com/KigaliToday"}]},
+
+	{"Technology":[
+		{"providername":"TechCrunch", "link":"http://feeds.feedburner.com/TechCrunch/"},
+		{"providername":"BBC Techonology", "link":"http://feeds.bbci.co.uk/news/technology/rss.xml"},
+		{"providername":"Yahoo Tech News", "link":"http://news.yahoo.com/rss/tech"},
+        {"providername":"Android Central - Android Forums", "link":"http://feeds2.feedburner.com/androidcentral"},
+        {"providername":"Apple Hot News","link":"https://www.apple.com/main/rss/hotnews/hotnews.rss"},
+        {"providername":"Microsoft TechNet", "link":"http://sxp.microsoft.com/feeds/3.0?tags=msit"},
+        {"providername":"ReadWrite", "link":"http://www.specificfeeds.com/Readwrite"},
+        {"providername":"Lifehacker", "link":"http://feeds.gawker.com/lifehacker/full#_ga=1.253742217.1664190382.1429167147"},
+        {"providername":"Engadget", "link":"http://www.engadget.com/rss.xml"},
+        {"providername":"The Verge", "link":"http://www.theverge.com/rss/frontpage"},
+        {"providername":"WIRED", "link":"http://www.wired.com/category/gear/feed/"},
+        {"providername":"TechRep", "link":"http://techrepublic.com.feedsportal.com/c/35463/f/670841/index.rss"},
+        {"providername":"Cnet", "link":"http://www.cnet.com/rss/news/"}]},
+
+	{"Sport":[
+		{"providername":"ESPN", "link":"http://feeds.feedburner.com/TechCrunch/"},
+		{"providername":"Yahoo Sports", "link":"https://sports.yahoo.com/top/rss.xml"},
+		{"providername":"DailyMail", "link":"http://www.dailymail.co.uk/articles.rss"},
+        {"providername":"BBC Sport", "link":"http://feeds.bbci.co.uk/sport/0/rss.xml?edition=uk"},
+        {"providername":"Fox Sports News", "link":"http://feeds.foxnews.com/foxnews/sports"},
+        {"providername":"CBS Sports", "link":"http://www.cbssports.com/partners/feeds/rss/home_news"},
+        {"providername":"Sports World News", "link":"http://www.sportsworldnews.com/rss/archives/all.xml"},
+        {"providername":"Reuters Sport", "link":"http://mf.feeds.reuters.com/reuters/UKSportsNews"},
+        {"providername":"NBA", "link":"http://www.nba.com/rss/nba_rss.xml"},
+        {"providername":"Fifa", "link":"http://www.fifa.com/rss/index.xml "}]},
+		
+	{"Gossip":[
+		{"providername":"E! Online", "link":"http://feeds.eonline.com/eonline/topstories"},
+		{"providername":"TMZ", "link":"http://www.tmz.com/rss.xml"},
+		{"providername":"People", "link":"http://rss.people.com/web/people/rss/topheadlines/index.xml"},
+        {"providername":"AccessHollyWood", "link":"http://feeds.accesshollywood.com/AccessHollywood/LatestNews"},
+        {"providername":"UsMagazine", "link":"http://www.usmagazine.com/celebrity_news/rss"},
+        {"providername":"DailyMail-TV Showbiz","link":"http://www.dailymail.co.uk/tvshowbiz/index.rss"}]},
+
+    {"Game":[
+		    {"providername":"Kotaku", "link":"http://feeds.gawker.com/kotaku/full#_ga=1.268858486.645001044.1431283897"},
+		    {"providername":"Polygon", "link":"http://www.polygon.com/rss/index.xmls"},
+		    {"providername":"IndieGames", "link":"http://feeds2.feedburner.com/IndependentGaming"},
+            {"providername":"Rock,Paper,Shotgun", "link":"http://feeds.feedburner.com/RockPaperShotgun"},
+            {"providername":"Xbox Live's Major", "link":"http://feeds.feedburner.com/MajorNelson"},
+            {"providername":"IGN Video Games","link":"http://feeds.ign.com/ign/games-all"},
+            {"providername":"TechCruch Gaming","link":"http://feeds.feedburner.com/TechCrunch/gaming"}]},
+
+    {"Health":[
+		    {"providername":"Health.com-Healthy Happy", "link":"http://www.health.com/health/healthy-happy/feed"},
+		    {"providername":"Health.com-Food Recipes", "link":"http://www.health.com/health/food-recipes/feed"},
+		    {"providername":"USA.gov-blog", "link":"http://feeds.feedburner.com/USAgov-blog"},
+            {"providername":"Health.com- Diet and Fitness", "link":"http://www.health.com/health/diet-fitness/feed"},
+            {"providername":"Smitten Kitchen", "link":"http://feeds.feedburner.com/smittenkitchen"},
+            {"providername":"MedPageToday","link":"http://www.medpagetoday.com/rss/Headlines.xml"},
+            {"providername":"Reuters-Health News","link":"http://feeds.reuters.com/reuters/healthNews"},
+            {"providername":"BBC Health News","link":"http://feeds.bbci.co.uk/news/health/rss.xml?edition=uk"},
+            {"providername":"Fox Health News","link":"http://feeds.foxnews.com/foxnews/health "}]},
+    {"Business":[
+		        {"providername":"Business Insider", "link":"http://feeds2.feedburner.com/businessinsider"},
+		        {"providername":"Enterpreneur", "link":"http://feeds.feedburner.com/entrepreneur/latest"},
+		        {"providername":"The atlantic-business", "link":" http://feeds.feedburner.com/AtlanticBusinessChannel"},
+                {"providername":"The Economist-Business and Finance", "link":"http://www.economist.com/sections/business-finance/rss.xml"},
+                {"providername":"Time-Business", "link":"http://feeds2.feedburner.com/time/business"},
+                {"providername":"Get Rich Slowly - Personal Finance That Makes Sense","link":"http://feeds.feedburner.com/getrichslowly"},
+                {"providername":"Forbes-Business","link":"http://www.forbes.com/business/feed/ "},
+                {"providername":"Reuters Business News","link":"http://feeds.reuters.com/reuters/businessNews"},
+                {"providername":"BBC Business","link":"http://feeds.bbci.co.uk/news/video_and_audio/business/rss.xml"}]},
+
+     {"People":[
+		            {"providername":"US Magazine", "link":"http://www.usmagazine.com/celebrity_news/rss"},
+		            {"providername":"CNN Students News", "link":"http://rss.cnn.com/services/podcasting/studentnews/rss.xml"},
+		            {"providername":"Reuters Entertainment News", "link":"http://feeds.reuters.com/reuters/entertainment"},
+                    {"providername":"People -Celeb Photos", "link":"http://rss.people.com/web/people/rss/photogalleries/index.xml"},
+                    {"providername":"TechCruch Social", "link":"http://feeds.feedburner.com/TechCrunch/social"},
+                    {"providername":"BBC Entertainment","link":"http://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml"},
+                    {"providername":"CNN Living","link":"http://rss.cnn.com/rss/cnn_living.rss "},
+                    {"providername":"ABC Good Morning America","link":"http://feeds.abcnews.com/abcnews/gmaheadlines"},
+                    {"providername":"ABC Travel News","link":"http://feeds.abcnews.com/abcnews/travelheadlines"}]}
+        ]}
