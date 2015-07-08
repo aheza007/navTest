@@ -27,6 +27,19 @@ public class ExpendableListViewAdapter extends BaseExpandableListAdapter {
 		this.mListDataHeader = listDataHeader;
 		this.mListDataChild = listChildData;
 	}
+	
+//	public void addItems(List<String> pListDataHeader,HashMap<String, List<FeedProvider>> pListDataChild){
+//		
+//		if(mListDataHeader!=null&&mListDataHeader.size()>0){
+//			mListDataHeader.clear();
+//			mListDataHeader=pListDataHeader;
+//		}
+//		if(mListDataChild!=null&&mListDataChild.size()>0){
+//			mListDataChild.clear();
+//			mListDataChild=pListDataChild;
+//		}
+//		notifyDataSetChanged();
+//	}
 
 	@Override
 	public int getGroupCount() {

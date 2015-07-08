@@ -1,14 +1,21 @@
 package com.example.navtest.fragments;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,10 +29,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
@@ -34,6 +39,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.model.FeedProvider;
 import com.example.navtest.MainActivity;
@@ -43,6 +49,11 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.LoginButton.UserInfoChangedCallback;
 import com.google.android.gms.common.SignInButton;
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed;
+import com.google.code.rome.android.repackaged.com.sun.syndication.io.FeedException;
+import com.google.code.rome.android.repackaged.com.sun.syndication.io.SyndFeedInput;
+import com.google.code.rome.android.repackaged.com.sun.syndication.io.XmlReader;
+import com.google.code.rome.android.repackaged.com.sun.syndication.io.XmlReaderException;
 
 @SuppressLint("NewApi")
 public class FragmentLeftDrawer extends Fragment {
@@ -56,9 +67,16 @@ public class FragmentLeftDrawer extends Fragment {
 	private LoginButton loginButton;
 	LinearLayout not_logged_in;
 	LinearLayout logged_in;
+	LinearLayout go_to_home;
 	RelativeLayout progress_bar_layout;
 	ProgressBar progress;
-	
+	ExpendableListViewAdapter listAdapter;
+	ExpandableListView mListView;
+	List<String> listDataHeader;
+	HashMap<String, List<FeedProvider>> listDataChild;
+
+	HashMap<String, FeedProvider> urlProvider;
+
 	public FragmentLeftDrawer() {
 	}
 
@@ -134,103 +152,132 @@ public class FragmentLeftDrawer extends Fragment {
 
 	}
 
-	ExpendableListViewAdapter listAdapter;
-	ExpandableListView mListView;
-	List<String> listDataHeader;
-	HashMap<String, List<FeedProvider>> listDataChild;
-
 	public void setUp(int fragmentId, DrawerLayout drawerLayout,
 			final Toolbar toolbar, boolean isLoggedIn) {
 
-		setUpDrawer(drawerLayout, toolbar);
-		containerView = getActivity().findViewById(fragmentId);
-		not_logged_in = (LinearLayout) containerView
-				.findViewById(R.id.not_logged_in);
+		try {
+			setUpDrawer(drawerLayout, toolbar);
+			containerView = getActivity().findViewById(fragmentId);
+			not_logged_in = (LinearLayout) containerView
+					.findViewById(R.id.not_logged_in);
 
-		if (progress_bar_layout != null
-				&& progress_bar_layout.VISIBLE == View.VISIBLE)
-			progress_bar_layout.setVisibility(View.INVISIBLE);
-		logged_in = (LinearLayout) containerView.findViewById(R.id.logged_in);
-		ImageView profile_image = (ImageView) containerView
-				.findViewById(R.id.profile_image);
-		TextView profile_name = (TextView) containerView
-				.findViewById(R.id.profile_name);
-		TextView profile_email = (TextView) containerView
-				.findViewById(R.id.profile_email);
-		profile_email.setText(((MainActivity) getActivity()).email);
-		profile_name.setText(((MainActivity) getActivity()).personName);
-		new LoadProfileImage(profile_image)
-				.execute(((MainActivity) getActivity()).personPhotoUrl);
-		Button lbuttonLogout = (Button) containerView
-				.findViewById(R.id.buttonLogout);
+			if (progress_bar_layout != null
+					&& progress_bar_layout.VISIBLE == View.VISIBLE)
+				progress_bar_layout.setVisibility(View.INVISIBLE);
+			logged_in = (LinearLayout) containerView.findViewById(R.id.logged_in);
+			ImageView profile_image = (ImageView) containerView
+					.findViewById(R.id.profile_image);
+			TextView profile_name = (TextView) containerView
+					.findViewById(R.id.profile_name);
+			TextView profile_email = (TextView) containerView
+					.findViewById(R.id.profile_email);
+			profile_email.setText(((MainActivity) getActivity()).email);
+			profile_name.setText(((MainActivity) getActivity()).personName);
+			new LoadProfileImage(profile_image)
+					.execute(((MainActivity) getActivity()).personPhotoUrl);
+			go_to_home = (LinearLayout) containerView.findViewById(R.id.go_to_home);
+			go_to_home.setOnClickListener(new OnClickListener() {
 
-		mListView = (ExpandableListView) containerView
-				.findViewById(R.id.listView_favorite_news_feeds);
-		int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.MATCH_PARENT, View.MeasureSpec.EXACTLY);
-		int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, View.MeasureSpec.EXACTLY);
-		mListView.measure(widthMeasureSpec, heightMeasureSpec);
-		
-		mListView.setOnTouchListener(new OnTouchListener() {
-		    // Setting on Touch Listener for handling the touch inside ScrollView
-		    @Override
-		    public boolean onTouch(View v, MotionEvent event) {
-		    // Disallow the touch request for parent scroll on touch of child view
-		    v.getParent().requestDisallowInterceptTouchEvent(true);
-		    return false;
-		    }
-		});
-		prepareFavoriteListView();
-		listAdapter = new ExpendableListViewAdapter(this.getActivity(),
-				listDataHeader, listDataChild);
+				@Override
+				public void onClick(View v) {
+					getData();
+				}
+			});
+			mListView = (ExpandableListView) containerView
+					.findViewById(R.id.listView_favorite_news_feeds);
+			// int widthMeasureSpec =
+			// View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.MATCH_PARENT,
+			// View.MeasureSpec.EXACTLY);
+			// int heightMeasureSpec =
+			// View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT,
+			// View.MeasureSpec.EXACTLY);
+			// mListView.measure(widthMeasureSpec, heightMeasureSpec);
 
-		// setting list adapter
-		mListView.setAdapter(listAdapter);
+			// mListView.setOnTouchListener(new OnTouchListener() {
+			// // Setting on Touch Listener for handling the touch inside ScrollView
+			// @Override
+			// public boolean onTouch(View v, MotionEvent event) {
+			// // Disallow the touch request for parent scroll on touch of child
+			// view
+			// v.getParent().requestDisallowInterceptTouchEvent(true);
+			// return false;
+			// }
+			// });
 
-		lbuttonLogout.setOnClickListener(new OnClickListener() {
+			LayoutInflater inflater = LayoutInflater.from(getActivity());
+			final View logoutView = inflater.inflate(R.layout.logout_view,
+					mListView, false);
+			mListView.addFooterView(logoutView);
+			Button lbuttonLogout = (Button) logoutView
+					.findViewById(R.id.buttonLogout);
 
-			@Override
-			public void onClick(View v) {
-				not_logged_in.setVisibility(View.VISIBLE);
-				logged_in.setVisibility(View.INVISIBLE);
-				((MainActivity) getActivity()).mSignInClicked = false;
-				((MainActivity) getActivity()).logedIn = false;
-				((MainActivity) getActivity()).signOutFromGplus();
-			}
-		});
-		not_logged_in.setVisibility(View.INVISIBLE);
-		logged_in.setVisibility(View.VISIBLE);
+			prepareFavoriteListView();
+
+			lbuttonLogout.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					mListView.removeFooterView(logoutView);
+					not_logged_in.setVisibility(View.VISIBLE);
+					logged_in.setVisibility(View.INVISIBLE);
+					((MainActivity) getActivity()).mSignInClicked = false;
+					((MainActivity) getActivity()).logedIn = false;
+					((MainActivity) getActivity()).signOutFromGplus();
+				}
+			});
+			not_logged_in.setVisibility(View.INVISIBLE);
+			logged_in.setVisibility(View.VISIBLE);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	
-	private void prepareFavoriteListView(){
-		listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<FeedProvider>>();
-		SharedPreferences preference=PreferenceManager.getDefaultSharedPreferences(getActivity());
-		Set<String> mFeedPreference=preference.getStringSet(MainActivity.FAVORITE_NEWS, new HashSet<String>());
-		if(mFeedPreference.size()>0){
-			for(String item:mFeedPreference){
-				String[] items=item.split(MainActivity.SPLITER);
-				String providerCategory=(String)items[0];
-				String providerName=items[1];
-				String providerLink=items[2];
-				String providerIcon=items[3];
-				if(!listDataHeader.contains(providerCategory))
-					listDataHeader.add(providerCategory);
-				FeedProvider itemProvider=new FeedProvider(providerCategory, providerName, providerLink,Integer.parseInt(providerIcon));
-				if(listDataChild.containsKey(providerCategory)){
-					List<FeedProvider> providers=listDataChild.get(providerCategory);
-//					for(FeedProvider prov:providers){
-//						if(prov.getProviderName()==providerName&&prov.getProviderUrl()==providerLink)
-//							break;
-//					}
-					listDataChild.get(providerCategory).add(itemProvider);
-					
+
+	private void prepareFavoriteListView() {
+		try {
+			listDataHeader = new ArrayList<String>();
+			listDataChild = new HashMap<String, List<FeedProvider>>();
+			urlProvider = new HashMap<String, FeedProvider>();
+			SharedPreferences preference = PreferenceManager
+					.getDefaultSharedPreferences(getActivity());
+			Set<String> mFeedPreference = preference.getStringSet(
+					MainActivity.FAVORITE_NEWS, new HashSet<String>());
+			if (mFeedPreference.size() > 0) {
+				for (String item : mFeedPreference) {
+					String[] items = item.split(MainActivity.SPLITER);
+					String providerCategory = (String) items[0];
+					String providerName = items[1];
+					String providerLink = items[2];
+					String providerIcon = items[3];
+
+					if (!listDataHeader.contains(providerCategory))
+						listDataHeader.add(providerCategory);
+
+					FeedProvider itemProvider = new FeedProvider(providerCategory,
+							providerName, providerLink,
+							Integer.parseInt(providerIcon));
+
+					if (listDataChild.containsKey(providerCategory)) {
+						listDataChild.get(providerCategory).add(itemProvider);
+
+					} else {
+						List<FeedProvider> provider = new ArrayList<>();
+						provider.add(itemProvider);
+						listDataChild.put(providerCategory, provider);
+					}
+
 				}
-				else{
-					List<FeedProvider> provider=new ArrayList<>();
-					provider.add(itemProvider);
-					listDataChild.put(providerCategory, provider);
-				}
+				// if(listAdapter!=null)
+				// listAdapter.notifyDataSetChanged();
+
+				listAdapter = new ExpendableListViewAdapter(this.getActivity(),
+						listDataHeader, listDataChild);
+
+				// setting list adapter
+				mListView.setAdapter(listAdapter);
 			}
+		} catch (Exception e) {
+
+			e.printStackTrace();
 		}
 	}
 
@@ -245,6 +292,11 @@ public class FragmentLeftDrawer extends Fragment {
 						&& (drawerView.findViewById(R.id.RecyclerView) != null))
 					drawerView.findViewById(R.id.RecyclerView).setVisibility(
 							View.VISIBLE);
+				if (mDrawerLayout.isDrawerOpen(Gravity.START)&&logged_in!=null
+						&& (logged_in.getVisibility() == View.VISIBLE)
+						&& (drawerView
+								.findViewById(R.id.listView_favorite_news_feeds) != null))
+					prepareFavoriteListView();
 				getActivity().supportInvalidateOptionsMenu();
 			}
 
@@ -282,6 +334,31 @@ public class FragmentLeftDrawer extends Fragment {
 		public void onDrawerItemSelected(View view, int position);
 	}
 
+	private void getData() {
+		try {
+			LoadHomeNews loadHomeNews = new LoadHomeNews(this.getActivity());
+			Iterator<Entry<String, List<FeedProvider>>> it = listDataChild
+					.entrySet().iterator();
+			List<String> provs = new ArrayList<>();
+			while (it.hasNext()) {
+				Map.Entry pair = (Map.Entry) it.next();
+				List<FeedProvider> p = (List<FeedProvider>) pair.getValue();
+				provs.add(p.get(0).getProviderUrl());
+				//it.remove(); // avoids a ConcurrentModificationException
+			}
+			String[] urls = new String[provs.size()];
+			int i=0;
+			for(String url: provs)
+			{	
+				urls[i]=url;
+				i++;
+			}
+			loadHomeNews.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, urls);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Background Async task to load user profile picture from url
 	 * */
@@ -308,5 +385,69 @@ public class FragmentLeftDrawer extends Fragment {
 		protected void onPostExecute(Bitmap result) {
 			bmImage.setImageBitmap(result);
 		}
+	}
+
+	private class LoadHomeNews extends
+			AsyncTask<String, String, List<SyndFeed>> {
+		Context mContext;
+
+		public LoadHomeNews(Context context) {
+			mContext = context;
+		}
+
+		@Override
+		protected List<SyndFeed> doInBackground(String... params) {
+			List<SyndFeed> results = new ArrayList<>();
+			try {
+				for (String url : params) {
+					results.add(getRSS(url));
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return results;
+		}
+
+		@Override
+		protected void onPostExecute(List<SyndFeed> result) {
+			try {
+				Toast.makeText(mContext, result.size() + " fetched News   Feeds",
+						Toast.LENGTH_LONG).show();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		private SyndFeed getRSS(String rss) {
+
+			URL feedUrl = null;
+			SyndFeed feed = null;
+			try {
+				Log.d("DEBUG", "Entered:" + rss);
+				feedUrl = new URL(rss);
+				Thread.currentThread().setContextClassLoader(
+						getClass().getClassLoader());
+				SyndFeedInput input = new SyndFeedInput();
+				XmlReader reader = new XmlReader(feedUrl);
+				feed = input.build(reader);
+
+				// return feed;
+
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (FeedException e) {
+				e.printStackTrace();
+			} catch (XmlReaderException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return feed;
+		}
+
 	}
 }
