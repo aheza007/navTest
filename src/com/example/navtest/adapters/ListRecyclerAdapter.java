@@ -75,7 +75,7 @@ public class ListRecyclerAdapter extends
 				
 				SharedPreferences pref=PreferenceManager.getDefaultSharedPreferences(mContext);
 				Set<String> set=pref.getStringSet(MainActivity.FAVORITE_NEWS, new HashSet<String>());
-				set.add("CategoryName:"+lProvider.getCategoryName()+":FeedProvider:"+lProvider.getProviderName());
+				set.add(lProvider.getCategoryName()+MainActivity.SPLITER+lProvider.getProviderName()+MainActivity.SPLITER+lProvider.getProviderUrl()+MainActivity.SPLITER+lProvider.getProviderIcon());
 				SharedPreferences.Editor editor=pref.edit();
 				editor.remove(MainActivity.FAVORITE_NEWS).commit();
 				editor.putStringSet(MainActivity.FAVORITE_NEWS, set);

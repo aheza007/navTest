@@ -1,13 +1,20 @@
 package com.example.navtest.fragments;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,18 +22,23 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.model.FeedProvider;
 import com.example.navtest.MainActivity;
 import com.example.navtest.R;
+import com.example.navtest.adapters.ExpendableListViewAdapter;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.LoginButton.UserInfoChangedCallback;
@@ -46,7 +58,7 @@ public class FragmentLeftDrawer extends Fragment {
 	LinearLayout logged_in;
 	RelativeLayout progress_bar_layout;
 	ProgressBar progress;
-
+	
 	public FragmentLeftDrawer() {
 	}
 
@@ -82,18 +94,19 @@ public class FragmentLeftDrawer extends Fragment {
 			loginButton = (LoginButton) containerView
 					.findViewById(R.id.facebook_login_button);
 			loginButton.setReadPermissions(Arrays.asList("email"));
-			loginButton.setUserInfoChangedCallback(new UserInfoChangedCallback() {
+			loginButton
+					.setUserInfoChangedCallback(new UserInfoChangedCallback() {
 
 						@Override
 						public void onUserInfoFetched(GraphUser user) {
 							if (user != null) {
 
-//								username.setText("You are currently logged in as "
-//										+ user.getName());
+								// username.setText("You are currently logged in as "
+								// + user.getName());
 
 							} else {
 
-								//username.setText("You are not logged in.");
+								// username.setText("You are not logged in.");
 
 							}
 
@@ -121,6 +134,11 @@ public class FragmentLeftDrawer extends Fragment {
 
 	}
 
+	ExpendableListViewAdapter listAdapter;
+	ExpandableListView mListView;
+	List<String> listDataHeader;
+	HashMap<String, List<FeedProvider>> listDataChild;
+
 	public void setUp(int fragmentId, DrawerLayout drawerLayout,
 			final Toolbar toolbar, boolean isLoggedIn) {
 
@@ -145,6 +163,29 @@ public class FragmentLeftDrawer extends Fragment {
 				.execute(((MainActivity) getActivity()).personPhotoUrl);
 		Button lbuttonLogout = (Button) containerView
 				.findViewById(R.id.buttonLogout);
+
+		mListView = (ExpandableListView) containerView
+				.findViewById(R.id.listView_favorite_news_feeds);
+		int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.MATCH_PARENT, View.MeasureSpec.EXACTLY);
+		int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, View.MeasureSpec.EXACTLY);
+		mListView.measure(widthMeasureSpec, heightMeasureSpec);
+		
+		mListView.setOnTouchListener(new OnTouchListener() {
+		    // Setting on Touch Listener for handling the touch inside ScrollView
+		    @Override
+		    public boolean onTouch(View v, MotionEvent event) {
+		    // Disallow the touch request for parent scroll on touch of child view
+		    v.getParent().requestDisallowInterceptTouchEvent(true);
+		    return false;
+		    }
+		});
+		prepareFavoriteListView();
+		listAdapter = new ExpendableListViewAdapter(this.getActivity(),
+				listDataHeader, listDataChild);
+
+		// setting list adapter
+		mListView.setAdapter(listAdapter);
+
 		lbuttonLogout.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -158,6 +199,39 @@ public class FragmentLeftDrawer extends Fragment {
 		});
 		not_logged_in.setVisibility(View.INVISIBLE);
 		logged_in.setVisibility(View.VISIBLE);
+	}
+	
+	private void prepareFavoriteListView(){
+		listDataHeader = new ArrayList<String>();
+        listDataChild = new HashMap<String, List<FeedProvider>>();
+		SharedPreferences preference=PreferenceManager.getDefaultSharedPreferences(getActivity());
+		Set<String> mFeedPreference=preference.getStringSet(MainActivity.FAVORITE_NEWS, new HashSet<String>());
+		if(mFeedPreference.size()>0){
+			for(String item:mFeedPreference){
+				String[] items=item.split(MainActivity.SPLITER);
+				String providerCategory=(String)items[0];
+				String providerName=items[1];
+				String providerLink=items[2];
+				String providerIcon=items[3];
+				if(!listDataHeader.contains(providerCategory))
+					listDataHeader.add(providerCategory);
+				FeedProvider itemProvider=new FeedProvider(providerCategory, providerName, providerLink,Integer.parseInt(providerIcon));
+				if(listDataChild.containsKey(providerCategory)){
+					List<FeedProvider> providers=listDataChild.get(providerCategory);
+//					for(FeedProvider prov:providers){
+//						if(prov.getProviderName()==providerName&&prov.getProviderUrl()==providerLink)
+//							break;
+//					}
+					listDataChild.get(providerCategory).add(itemProvider);
+					
+				}
+				else{
+					List<FeedProvider> provider=new ArrayList<>();
+					provider.add(itemProvider);
+					listDataChild.put(providerCategory, provider);
+				}
+			}
+		}
 	}
 
 	private void setUpDrawer(DrawerLayout drawerLayout, final Toolbar toolbar) {

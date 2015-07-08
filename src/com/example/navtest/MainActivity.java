@@ -44,6 +44,7 @@ public class MainActivity extends ActionBarActivity implements
 		OnConnectionFailedListener {
 	
 	public static final String FAVORITE_NEWS = "FAVORITE_NEWS";
+	public static final String SPLITER="F2:57:C7;com.example.97:BB:48:6D.navtest.fragments";
 	private static final int RC_SIGN_IN = 0;
 	private static final int PROFILE_PIC_SIZE = 400;
 	private static final String TAG = null;
