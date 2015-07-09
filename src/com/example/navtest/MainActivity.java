@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.model.FeedProvider;
 import com.example.navtest.fragments.FragmentFeedList;
+import com.example.navtest.fragments.FragmentHomeFavorite;
 import com.example.navtest.fragments.FragmentLeftDrawer;
 import com.example.navtest.fragments.FragmentLeftDrawer.FragmentDrawerListener;
 import com.example.navtest.fragments.HomeFragment;
@@ -195,13 +196,13 @@ public class MainActivity extends ActionBarActivity implements
 			// Toast.LENGTH_LONG).show();
 			fragment = new FragmentFeedList();
 			break;
-		// fragment = new FriendsFragment();
+			//fragment = new FriendsFragment();
 		// title = getString(R.string.title_friends);
 		// break;
-		// case 2:
-		// fragment = new MessagesFragment();
-		// title = getString(R.string.title_messages);
-		// break;
+		 case 2:
+		 fragment = new FragmentHomeFavorite();
+		// title = getString(R.string.title_fragment_home_favorite);
+		 break;
 		default:
 			break;
 		}

@@ -73,7 +73,7 @@ public class FragmentLeftDrawer extends Fragment {
 	ExpendableListViewAdapter listAdapter;
 	ExpandableListView mListView;
 	List<String> listDataHeader;
-	HashMap<String, List<FeedProvider>> listDataChild;
+	public static HashMap<String, List<FeedProvider>> listDataChild;
 
 	HashMap<String, FeedProvider> urlProvider;
 
@@ -164,7 +164,8 @@ public class FragmentLeftDrawer extends Fragment {
 			if (progress_bar_layout != null
 					&& progress_bar_layout.VISIBLE == View.VISIBLE)
 				progress_bar_layout.setVisibility(View.INVISIBLE);
-			logged_in = (LinearLayout) containerView.findViewById(R.id.logged_in);
+			logged_in = (LinearLayout) containerView
+					.findViewById(R.id.logged_in);
 			ImageView profile_image = (ImageView) containerView
 					.findViewById(R.id.profile_image);
 			TextView profile_name = (TextView) containerView
@@ -175,12 +176,14 @@ public class FragmentLeftDrawer extends Fragment {
 			profile_name.setText(((MainActivity) getActivity()).personName);
 			new LoadProfileImage(profile_image)
 					.execute(((MainActivity) getActivity()).personPhotoUrl);
-			go_to_home = (LinearLayout) containerView.findViewById(R.id.go_to_home);
+			go_to_home = (LinearLayout) containerView
+					.findViewById(R.id.go_to_home);
 			go_to_home.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
-					getData();
+					((MainActivity) getActivity()).displayView(2);
+					//getData();
 				}
 			});
 			mListView = (ExpandableListView) containerView
@@ -194,7 +197,8 @@ public class FragmentLeftDrawer extends Fragment {
 			// mListView.measure(widthMeasureSpec, heightMeasureSpec);
 
 			// mListView.setOnTouchListener(new OnTouchListener() {
-			// // Setting on Touch Listener for handling the touch inside ScrollView
+			// // Setting on Touch Listener for handling the touch inside
+			// ScrollView
 			// @Override
 			// public boolean onTouch(View v, MotionEvent event) {
 			// // Disallow the touch request for parent scroll on touch of child
@@ -252,8 +256,8 @@ public class FragmentLeftDrawer extends Fragment {
 					if (!listDataHeader.contains(providerCategory))
 						listDataHeader.add(providerCategory);
 
-					FeedProvider itemProvider = new FeedProvider(providerCategory,
-							providerName, providerLink,
+					FeedProvider itemProvider = new FeedProvider(
+							providerCategory, providerName, providerLink,
 							Integer.parseInt(providerIcon));
 
 					if (listDataChild.containsKey(providerCategory)) {
@@ -292,7 +296,8 @@ public class FragmentLeftDrawer extends Fragment {
 						&& (drawerView.findViewById(R.id.RecyclerView) != null))
 					drawerView.findViewById(R.id.RecyclerView).setVisibility(
 							View.VISIBLE);
-				if (mDrawerLayout.isDrawerOpen(Gravity.START)&&logged_in!=null
+				if (mDrawerLayout.isDrawerOpen(Gravity.START)
+						&& logged_in != null
 						&& (logged_in.getVisibility() == View.VISIBLE)
 						&& (drawerView
 								.findViewById(R.id.listView_favorite_news_feeds) != null))
@@ -334,30 +339,7 @@ public class FragmentLeftDrawer extends Fragment {
 		public void onDrawerItemSelected(View view, int position);
 	}
 
-	private void getData() {
-		try {
-			LoadHomeNews loadHomeNews = new LoadHomeNews(this.getActivity());
-			Iterator<Entry<String, List<FeedProvider>>> it = listDataChild
-					.entrySet().iterator();
-			List<String> provs = new ArrayList<>();
-			while (it.hasNext()) {
-				Map.Entry pair = (Map.Entry) it.next();
-				List<FeedProvider> p = (List<FeedProvider>) pair.getValue();
-				provs.add(p.get(0).getProviderUrl());
-				//it.remove(); // avoids a ConcurrentModificationException
-			}
-			String[] urls = new String[provs.size()];
-			int i=0;
-			for(String url: provs)
-			{	
-				urls[i]=url;
-				i++;
-			}
-			loadHomeNews.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, urls);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+
 
 	/**
 	 * Background Async task to load user profile picture from url
@@ -387,67 +369,4 @@ public class FragmentLeftDrawer extends Fragment {
 		}
 	}
 
-	private class LoadHomeNews extends
-			AsyncTask<String, String, List<SyndFeed>> {
-		Context mContext;
-
-		public LoadHomeNews(Context context) {
-			mContext = context;
-		}
-
-		@Override
-		protected List<SyndFeed> doInBackground(String... params) {
-			List<SyndFeed> results = new ArrayList<>();
-			try {
-				for (String url : params) {
-					results.add(getRSS(url));
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return results;
-		}
-
-		@Override
-		protected void onPostExecute(List<SyndFeed> result) {
-			try {
-				Toast.makeText(mContext, result.size() + " fetched News   Feeds",
-						Toast.LENGTH_LONG).show();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		private SyndFeed getRSS(String rss) {
-
-			URL feedUrl = null;
-			SyndFeed feed = null;
-			try {
-				Log.d("DEBUG", "Entered:" + rss);
-				feedUrl = new URL(rss);
-				Thread.currentThread().setContextClassLoader(
-						getClass().getClassLoader());
-				SyndFeedInput input = new SyndFeedInput();
-				XmlReader reader = new XmlReader(feedUrl);
-				feed = input.build(reader);
-
-				// return feed;
-
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			} catch (FeedException e) {
-				e.printStackTrace();
-			} catch (XmlReaderException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return feed;
-		}
-
-	}
 }
