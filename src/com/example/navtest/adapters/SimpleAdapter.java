@@ -8,33 +8,39 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.navtest.R;
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndEntry;
 
 public class SimpleAdapter extends
 		RecyclerView.Adapter<SimpleAdapter.SimpleViewHolder> {
-	private static final int COUNT = 17;
 
 	private final Context mContext;
-	private final List<Integer> mItems;
+	private final List<SyndEntry> mItems;
 	private int mCurrentItemId = 0;
 
 	public static class SimpleViewHolder extends RecyclerView.ViewHolder {
 		public final TextView title;
-
+		public final ImageView feedImageItem;
 		public SimpleViewHolder(View view) {
 			super(view);
 			title = (TextView) view.findViewById(R.id.title);
+			feedImageItem=(ImageView)view.findViewById(R.id.item_image);
 		}
 	}
 
-	public SimpleAdapter(Context context) {
+	public SimpleAdapter(Context context, List<SyndEntry> mLists) {
 		mContext = context;
-		mItems = new ArrayList<Integer>(COUNT);
-		for (int i = 0; i < COUNT; i++) {
-			addItem(i);
+		if (mLists!=null) {
+			mItems = new ArrayList<SyndEntry>(mLists.size());
+			for (int i = 0; i < mLists.size(); i++) {
+				addItem(i,mLists.get(i));
+			}
 		}
+		else
+			mItems=new ArrayList<>();
 	}
 
 	public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -45,12 +51,12 @@ public class SimpleAdapter extends
 
 	@Override
 	public void onBindViewHolder(SimpleViewHolder holder, final int position) {
-		holder.title.setText(mItems.get(position).toString());
+		holder.title.setText(mItems.get(position).getTitle().toString());
 	}
 
-	public void addItem(int position) {
+	public void addItem(int position,SyndEntry entry) {
 		final int id = mCurrentItemId++;
-		mItems.add(position, id);
+		mItems.add(position, entry);
 		notifyItemInserted(position);
 	}
 
