@@ -1,7 +1,9 @@
 # cache for current jar dependency. DO NOT EDIT.
 # format is <lastModified> <length> <SHA-1> <path>
 # Encoding is UTF-8
-1434731891971 586330 6320cadeeae06d913978807ee787e9fafac77a27 C:\Dev\LeeRoyJenkings\Mobile\Android\android-support-v7-appcompat\libs\android-support-v7-appcompat.jar
-1436284105393 586330 6320cadeeae06d913978807ee787e9fafac77a27 C:\Users\DAheza\Desktop\navtest\navTest\libs\android-support-v7-appcompat.jar
-1434983379067 1184450 e19387dc3b060af32f5401f84fbe246635256955 C:\Dev\LeeRoyJenkings\Mobile\Android\myFlipViewLibrary\libs\android-support-v4.jar
-1434731891988 1184450 e19387dc3b060af32f5401f84fbe246635256955 C:\Dev\LeeRoyJenkings\Mobile\Android\android-support-v7-appcompat\libs\android-support-v4.jar
+1436319967241 586330 6320cadeeae06d913978807ee787e9fafac77a27 C:\Users\desire.aheza\workspaceBundle\navTest\libs\android-support-v7-appcompat.jar
+1434609926663 586330 6320cadeeae06d913978807ee787e9fafac77a27 C:\Program Files (x86)\android\adt-bundle-windows-x86_64-20140702\sdk\extras\android\support\v7\appcompat\libs\android-support-v7-appcompat.jar
+1436319967244 253649 d0a070bea031e60ee29ccf4b7d730c32253efd34 C:\Users\desire.aheza\workspaceBundle\navTest\libs\android-support-v7-recyclerview.jar
+1434609926741 253649 d0a070bea031e60ee29ccf4b7d730c32253efd34 C:\Program Files (x86)\android\adt-bundle-windows-x86_64-20140702\sdk\extras\android\support\v7\recyclerview\libs\android-support-v7-recyclerview.jar
+1434983379067 1184450 e19387dc3b060af32f5401f84fbe246635256955 C:\Users\desire.aheza\workspaceBundle\myFlipViewLibrary\libs\android-support-v4.jar
+1434609926710 1184450 e19387dc3b060af32f5401f84fbe246635256955 C:\Program Files (x86)\android\adt-bundle-windows-x86_64-20140702\sdk\extras\android\support\v7\appcompat\libs\android-support-v4.jar

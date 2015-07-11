@@ -181,6 +181,7 @@ public class FragmentHomeFavorite extends Fragment {
 			}
 			loadHomeNews
 					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, urls);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

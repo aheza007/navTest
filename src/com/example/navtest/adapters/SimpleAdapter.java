@@ -52,6 +52,7 @@ public class SimpleAdapter extends
 	@Override
 	public void onBindViewHolder(SimpleViewHolder holder, final int position) {
 		holder.title.setText(mItems.get(position).getTitle().toString());
+		//holder.feedImageItem.
 	}
 
 	public void addItem(int position,SyndEntry entry) {
