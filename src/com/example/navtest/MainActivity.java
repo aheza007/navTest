@@ -22,12 +22,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
 import com.example.model.FeedProvider;
+import com.example.navtest.fragments.FragmentExploreNews;
 import com.example.navtest.fragments.FragmentFeedList;
 import com.example.navtest.fragments.FragmentHomeFavorite;
 import com.example.navtest.fragments.FragmentLeftDrawer;
 import com.example.navtest.fragments.FragmentLeftDrawer.FragmentDrawerListener;
 import com.example.navtest.fragments.HomeFragment;
+import com.example.navtest.utils.VolleySingleton;
 import com.facebook.AppEventsLogger;
 import com.facebook.Session;
 import com.facebook.SessionState;
@@ -43,9 +47,9 @@ import com.google.android.gms.plus.model.people.Person;
 public class MainActivity extends ActionBarActivity implements
 		FragmentDrawerListener, OnClickListener, ConnectionCallbacks,
 		OnConnectionFailedListener {
-	
+
 	public static final String FAVORITE_NEWS = "FAVORITE_NEWS";
-	public static final String SPLITER="F2:57:C7;com.example.97:BB:48:6D.navtest.fragments";
+	public static final String SPLITER = "F2:57:C7;com.example.97:BB:48:6D.navtest.fragments";
 	private static final int RC_SIGN_IN = 0;
 	private static final int PROFILE_PIC_SIZE = 400;
 	private static final String TAG = null;
@@ -61,12 +65,21 @@ public class MainActivity extends ActionBarActivity implements
 	// Active Session in a way that is similar to Android UI lifecycles.
 	public UiLifecycleHelper uiHelper;
 	private Object FacebookSdk;
-	
+
+	// volley request queue
+	public RequestQueue requestQueue;
+
+	// ImageLoader
+	public ImageLoader imageLoader;
+
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		// get instance of the requestQueue
+		requestQueue = VolleySingleton.getInstance(this).getRequestQueue();
+		imageLoader = VolleySingleton.getInstance(this).getImageLoader();
 		// As we're using a Toolbar, we should retrieve it and set it
 		// to be our ActionBar
 		toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
@@ -74,7 +87,7 @@ public class MainActivity extends ActionBarActivity implements
 		getSupportActionBar().setTitle("");
 		drawerFragment = (FragmentLeftDrawer) getSupportFragmentManager()
 				.findFragmentById(R.id.fragment_left_drawer);
-		
+
 		// Now retrieve the DrawerLayout so that we can set the status bar
 		// color.
 		// This only takes effect on Lollipop, or when using
@@ -89,13 +102,21 @@ public class MainActivity extends ActionBarActivity implements
 				.addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this).addApi(Plus.API)
 				.addScope(Plus.SCOPE_PLUS_LOGIN).build();
-		SharedPreferences sharedPref=PreferenceManager.getDefaultSharedPreferences(this);
-		if(!sharedPref.contains(FAVORITE_NEWS)){
-			SharedPreferences.Editor editor=sharedPref.edit();
+		SharedPreferences sharedPref = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		if (!sharedPref.contains(FAVORITE_NEWS)) {
+			SharedPreferences.Editor editor = sharedPref.edit();
 			editor.putStringSet(FAVORITE_NEWS, new HashSet<String>()).apply();
-		}		
+		}
 		displayView(0);
 		updateUI(logedIn);
+	}
+
+	public void closeDrawer() {
+		if (drawerLayout.isDrawerOpen(Gravity.END))
+			drawerLayout.closeDrawer(Gravity.END);
+		else
+			drawerLayout.closeDrawer(Gravity.START);
 	}
 
 	private Session.StatusCallback statusCallback = new Session.StatusCallback() {
@@ -192,17 +213,16 @@ public class MainActivity extends ActionBarActivity implements
 			// title = getString(R.string.title_home);
 			break;
 		case 1:
-			// Toast.makeText(this, "need to display list Item fragment",
-			// Toast.LENGTH_LONG).show();
 			fragment = new FragmentFeedList();
 			break;
-			//fragment = new FriendsFragment();
-		// title = getString(R.string.title_friends);
-		// break;
-		 case 2:
-		 fragment = new FragmentHomeFavorite();
-		// title = getString(R.string.title_fragment_home_favorite);
-		 break;
+		case 2:
+			fragment = new FragmentHomeFavorite();
+			// title = getString(R.string.title_fragment_home_favorite);
+			break;
+		case 3:
+			fragment = new FragmentExploreNews();
+			// title = getString(R.string.title_fragment_home_favorite);
+			break;
 		default:
 			break;
 		}
@@ -212,6 +232,7 @@ public class MainActivity extends ActionBarActivity implements
 			FragmentTransaction fragmentTransaction = fragmentManager
 					.beginTransaction();
 			fragmentTransaction.replace(R.id.container_body, fragment);
+			fragmentTransaction.addToBackStack(null);
 			fragmentTransaction.commit();
 
 		}

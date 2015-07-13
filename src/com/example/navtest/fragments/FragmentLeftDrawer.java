@@ -1,21 +1,14 @@
 package com.example.navtest.fragments;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -39,7 +32,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.model.FeedProvider;
 import com.example.navtest.MainActivity;
@@ -49,11 +41,6 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.LoginButton.UserInfoChangedCallback;
 import com.google.android.gms.common.SignInButton;
-import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed;
-import com.google.code.rome.android.repackaged.com.sun.syndication.io.FeedException;
-import com.google.code.rome.android.repackaged.com.sun.syndication.io.SyndFeedInput;
-import com.google.code.rome.android.repackaged.com.sun.syndication.io.XmlReader;
-import com.google.code.rome.android.repackaged.com.sun.syndication.io.XmlReaderException;
 
 @SuppressLint("NewApi")
 public class FragmentLeftDrawer extends Fragment {
@@ -68,6 +55,7 @@ public class FragmentLeftDrawer extends Fragment {
 	LinearLayout not_logged_in;
 	LinearLayout logged_in;
 	LinearLayout go_to_home;
+	LinearLayout go_to_explorer;
 	RelativeLayout progress_bar_layout;
 	ProgressBar progress;
 	ExpendableListViewAdapter listAdapter;
@@ -178,41 +166,30 @@ public class FragmentLeftDrawer extends Fragment {
 					.execute(((MainActivity) getActivity()).personPhotoUrl);
 			go_to_home = (LinearLayout) containerView
 					.findViewById(R.id.go_to_home);
+			go_to_explorer = (LinearLayout) containerView
+					.findViewById(R.id.go_to_explorer);
+
 			go_to_home.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
+					((MainActivity) getActivity()).closeDrawer();
 					((MainActivity) getActivity()).displayView(2);
-					//getData();
+					// getData();
+				}
+			});
+			go_to_explorer.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					((MainActivity) getActivity()).closeDrawer();
+					((MainActivity) getActivity()).displayView(3);
 				}
 			});
 			mListView = (ExpandableListView) containerView
 					.findViewById(R.id.listView_favorite_news_feeds);
-			// int widthMeasureSpec =
-			// View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.MATCH_PARENT,
-			// View.MeasureSpec.EXACTLY);
-			// int heightMeasureSpec =
-			// View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT,
-			// View.MeasureSpec.EXACTLY);
-			// mListView.measure(widthMeasureSpec, heightMeasureSpec);
 
-			// mListView.setOnTouchListener(new OnTouchListener() {
-			// // Setting on Touch Listener for handling the touch inside
-			// ScrollView
-			// @Override
-			// public boolean onTouch(View v, MotionEvent event) {
-			// // Disallow the touch request for parent scroll on touch of child
-			// view
-			// v.getParent().requestDisallowInterceptTouchEvent(true);
-			// return false;
-			// }
-			// });
-
-			LayoutInflater inflater = LayoutInflater.from(getActivity());
-			final View logoutView = inflater.inflate(R.layout.logout_view,
-					mListView, false);
-			mListView.addFooterView(logoutView);
-			Button lbuttonLogout = (Button) logoutView
+			Button lbuttonLogout = (Button) containerView
 					.findViewById(R.id.buttonLogout);
 
 			prepareFavoriteListView();
@@ -221,7 +198,6 @@ public class FragmentLeftDrawer extends Fragment {
 
 				@Override
 				public void onClick(View v) {
-					mListView.removeFooterView(logoutView);
 					not_logged_in.setVisibility(View.VISIBLE);
 					logged_in.setVisibility(View.INVISIBLE);
 					((MainActivity) getActivity()).mSignInClicked = false;
@@ -318,6 +294,7 @@ public class FragmentLeftDrawer extends Fragment {
 				toolbar.setAlpha(1 - slideOffset / 2);
 			}
 		};
+		
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		mDrawerLayout.post(new Runnable() {
 			@Override
@@ -338,8 +315,6 @@ public class FragmentLeftDrawer extends Fragment {
 
 		public void onDrawerItemSelected(View view, int position);
 	}
-
-
 
 	/**
 	 * Background Async task to load user profile picture from url

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.model.FeedProvider;
-import com.example.navtest.MainActivity;
 import com.example.navtest.R;
 import com.example.navtest.adapters.SectionedGridRecyclerViewAdapter;
 import com.example.navtest.adapters.SimpleAdapter;
@@ -44,12 +42,6 @@ public class FragmentHomeFavorite extends Fragment {
 	ProgressBar mProgressBar;
 	List<LoadHomeNewsTask> myTasks;
 	List<SyndFeed> myItems;
-
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-	}
 
 	@Override
 	@Nullable
@@ -72,7 +64,6 @@ public class FragmentHomeFavorite extends Fragment {
 		// set the gridLayout with the spanCount=2
 		mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 		myItems = new ArrayList<>();
-		// setGridAdapter(myItems);
 
 		return rootView;
 	}
@@ -201,7 +192,7 @@ public class FragmentHomeFavorite extends Fragment {
 				mProgressBar.setVisibility(View.VISIBLE);
 			myTasks.add(this);
 		}
-
+		
 		@Override
 		protected List<SyndFeed> doInBackground(String... params) {
 			List<SyndFeed> results = new ArrayList<>();

@@ -28,8 +28,8 @@
         {"providername":"Cnet", "link":"http://www.cnet.com/rss/news/"}]},
 
 	{"Sport":[
-		{"providername":"ESPN", "link":"http://feeds.feedburner.com/TechCrunch/"},
 		{"providername":"Yahoo Sports", "link":"https://sports.yahoo.com/top/rss.xml"},
+		{"providername":"ESPN", "link":"http://sports.espn.go.com/espn/rss/news"},
 		{"providername":"DailyMail", "link":"http://www.dailymail.co.uk/articles.rss"},
         {"providername":"BBC Sport", "link":"http://feeds.bbci.co.uk/sport/0/rss.xml?edition=uk"},
         {"providername":"Fox Sports News", "link":"http://feeds.foxnews.com/foxnews/sports"},
@@ -39,9 +39,9 @@
         {"providername":"NBA", "link":"http://www.nba.com/rss/nba_rss.xml"},
         {"providername":"Fifa", "link":"http://www.fifa.com/rss/index.xml "}]},
 		
-	{"Gossip":[
-		{"providername":"E! Online", "link":"http://feeds.eonline.com/eonline/topstories"},
+	{"Gossip":[	
 		{"providername":"TMZ", "link":"http://www.tmz.com/rss.xml"},
+		{"providername":"E! Online", "link":"http://feeds.eonline.com/eonline/topstories"},
 		{"providername":"People", "link":"http://rss.people.com/web/people/rss/topheadlines/index.xml"},
         {"providername":"AccessHollyWood", "link":"http://feeds.accesshollywood.com/AccessHollywood/LatestNews"},
         {"providername":"UsMagazine", "link":"http://www.usmagazine.com/celebrity_news/rss"},
@@ -57,6 +57,7 @@
             {"providername":"TechCruch Gaming","link":"http://feeds.feedburner.com/TechCrunch/gaming"}]},
 
     {"Health":[
+			{"providername":"BBC Health News","link":"http://feeds.bbci.co.uk/news/health/rss.xml?edition=uk"},
 		    {"providername":"Health.com-Healthy Happy", "link":"http://www.health.com/health/healthy-happy/feed"},
 		    {"providername":"Health.com-Food Recipes", "link":"http://www.health.com/health/food-recipes/feed"},
 		    {"providername":"USA.gov-blog", "link":"http://feeds.feedburner.com/USAgov-blog"},
@@ -64,7 +65,6 @@
             {"providername":"Smitten Kitchen", "link":"http://feeds.feedburner.com/smittenkitchen"},
             {"providername":"MedPageToday","link":"http://www.medpagetoday.com/rss/Headlines.xml"},
             {"providername":"Reuters-Health News","link":"http://feeds.reuters.com/reuters/healthNews"},
-            {"providername":"BBC Health News","link":"http://feeds.bbci.co.uk/news/health/rss.xml?edition=uk"},
             {"providername":"Fox Health News","link":"http://feeds.foxnews.com/foxnews/health "}]},
     {"Business":[
 		        {"providername":"Business Insider", "link":"http://feeds2.feedburner.com/businessinsider"},
@@ -77,14 +77,15 @@
                 {"providername":"Reuters Business News","link":"http://feeds.reuters.com/reuters/businessNews"},
                 {"providername":"BBC Business","link":"http://feeds.bbci.co.uk/news/video_and_audio/business/rss.xml"}]},
 
-     {"People":[
-		            {"providername":"US Magazine", "link":"http://www.usmagazine.com/celebrity_news/rss"},
-		            {"providername":"CNN Students News", "link":"http://rss.cnn.com/services/podcasting/studentnews/rss.xml"},
-		            {"providername":"Reuters Entertainment News", "link":"http://feeds.reuters.com/reuters/entertainment"},
-                    {"providername":"People -Celeb Photos", "link":"http://rss.people.com/web/people/rss/photogalleries/index.xml"},
-                    {"providername":"TechCruch Social", "link":"http://feeds.feedburner.com/TechCrunch/social"},
-                    {"providername":"BBC Entertainment","link":"http://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml"},
-                    {"providername":"CNN Living","link":"http://rss.cnn.com/rss/cnn_living.rss "},
-                    {"providername":"ABC Good Morning America","link":"http://feeds.abcnews.com/abcnews/gmaheadlines"},
-                    {"providername":"ABC Travel News","link":"http://feeds.abcnews.com/abcnews/travelheadlines"}]}
+   {"People":[
+			{"providername":"ABC Travel News","link":"http://feeds.abcnews.com/abcnews/travelheadlines"}]},
+		    {"providername":"US Magazine", "link":"http://www.usmagazine.com/celebrity_news/rss"},
+		    {"providername":"CNN Students News", "link":"http://rss.cnn.com/services/podcasting/studentnews/rss.xml"},
+		    {"providername":"Reuters Entertainment News", "link":"http://feeds.reuters.com/reuters/entertainment"},
+            {"providername":"People -Celeb Photos", "link":"http://rss.people.com/web/people/rss/photogalleries/index.xml"},
+            {"providername":"TechCruch Social", "link":"http://feeds.feedburner.com/TechCrunch/social"},
+            {"providername":"BBC Entertainment","link":"http://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml"},
+            {"providername":"CNN Living","link":"http://rss.cnn.com/rss/cnn_living.rss "},
+            {"providername":"ABC Good Morning America","link":"http://feeds.abcnews.com/abcnews/gmaheadlines"}
+                    
         ]}

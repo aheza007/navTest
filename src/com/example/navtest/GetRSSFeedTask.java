@@ -7,6 +7,7 @@ import java.net.URL;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 
 import com.example.navtest.fragments.FragmentFeedList;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed;
@@ -32,17 +33,19 @@ public class GetRSSFeedTask extends AsyncTask<String, Integer, SyndFeed> {
 	protected void onPreExecute() {
 
 		super.onPreExecute();
-		dialog = new ProgressDialog(mActivty);
-		if (dialog != null) {
-			dialog.setMessage("Loading...");
-			dialog.show();
-		}
+//		dialog = new ProgressDialog(mActivty);
+//		if (dialog != null) {
+//			dialog.setMessage("Loading...");
+//			dialog.show();
+//		}
+		mFragmentFeedList.mProgressBar.setVisibility(View.VISIBLE);
 	}
 
 	protected void onPostExecute(SyndFeed result) {
 		super.onPostExecute(result);
 
-		dialog.dismiss();
+		//dialog.dismiss();
+		mFragmentFeedList.mProgressBar.setVisibility(View.INVISIBLE);
 		mFragmentFeedList.setAdapter(result);
 	}
 

@@ -46,8 +46,7 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 		String String_feed_title = "Title";
 		String String_provider = "TechCrunch";
 		String String_authors = "Desire Aheza";
-		String String_feed_description = "afddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd afsddddddddddddddddddsfafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafa";
-
+		String String_feed_description = "afdddddddddddddddddddddddddddddddddddddddddd";
 		long mId;
 
 		public Item() {
@@ -121,9 +120,6 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 
 	public FlipAdapter(MainActivity context, List<SyndEntry> pitems) {
 		inflater = LayoutInflater.from(context);
-		// for (int i = 0; i < 10; i++) {
-		// items.add(new Item());
-		// }
 		mContext = context;
 		syndFeedsEntry = pitems;
 
