@@ -119,6 +119,14 @@ public class SectionedGridRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
             this.firstPosition = firstPosition;
             this.title = title;
         }
+        
+        public void setPosition(int pos){
+        	this.firstPosition=pos;
+        }
+        
+        public void setTitle(CharSequence title){
+        	this.title=title;
+        }
  
         public CharSequence getTitle() {
             return title;
