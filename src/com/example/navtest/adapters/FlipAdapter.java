@@ -21,8 +21,10 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.model.FeedProvider;
+import com.example.navtest.FeedItemDetailsActivity;
 import com.example.navtest.MainActivity;
 import com.example.navtest.R;
 import com.google.android.gms.plus.PlusShare;
@@ -117,7 +119,8 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 	static final int ViewBigPhoto = 0;
 	static final int ViewSmallPhoto = 0;
 	static boolean isBigPicture = false;
-
+//	static onFlipItemClick mFlipItemClickListener;
+	
 	public FlipAdapter(MainActivity context, List<SyndEntry> pitems) {
 		inflater = LayoutInflater.from(context);
 		mContext = context;
@@ -268,7 +271,7 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 			holder.imageView_feed_image.setImageResource(mProvider
 					.getProviderIcon());
 		}
-		convertView.setTag(R.id.textView_feed_description, feedItem.getUri());
+		//convertView.setTag(R.id.textView_feed_description, Description);
 		holder.imageViewshare.setTag(R.id.imageView_feed_image, feedItem);
 		holder.imageViewshare.setOnClickListener(new OnClickListener() {
 
@@ -286,6 +289,7 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 			}
 		});
 		
+		convertView.setTag(R.id.textView_feed_description, feedItem.getTitle());
 		return convertView;
 	}
 
@@ -317,6 +321,17 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 				.findViewById(R.id.imageView_feed_image);
 		holder.imageViewshare = (ImageView) convertView
 				.findViewById(R.id.imageViewshare);
+		convertView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+			 
+			//	Toast.makeText(mContext, "item Clicked: "+v.getTag(R.id.textView_feed_description), Toast.LENGTH_LONG).show();
+				Intent intent=new Intent(mContext,FeedItemDetailsActivity.class);
+				intent.putExtra("FEEDURL",(String)v.getTag(R.id.textView_feed_description));
+				mContext.startActivity(intent);	
+			}
+		});
 		convertView.setTag(holder);
 	}
 
@@ -334,7 +349,7 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 		return source.subSequence(0, i + 1);
 	}
 
-	static class ViewHolder {
+	static class ViewHolder  {
 		TextView text;
 		TextView textView_category;
 		TextView textView_time;
@@ -345,6 +360,7 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 		TextView textView_feed_description;
 		Button buttonReadMore;
 		ImageView imageViewshare;
+	
 	}
 
 	@Override
@@ -388,16 +404,14 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 		}
 		notifyDataSetChanged();
 	}
-	//
-	// @Override
-	// public int getItemViewType(int position) {
-	//
-	// return isBigPicture?ViewBigPhoto:ViewSmallPhoto;
-	// }
-	//
-	// @Override
-	// public int getViewTypeCount() {
-	//
-	// return 2;
-	// }
+	
+	//item click listener Interface
+//	
+//	public static interface onFlipItemClick {
+//		public void itemClick(View caller);
+//	}
+//	
+//	public void setOnItemClickListener(final onFlipItemClick flipItem){
+//		mFlipItemClickListener=flipItem;
+//	}
 }

@@ -28,6 +28,7 @@
             android:text="Welcome to newsTracker" />
 
         <Button
+            android:id="@+id/explorer_not_loggedin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Explorer" />
@@ -45,11 +46,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp" />
-
-        <com.facebook.widget.LoginButton
-            android:id="@+id/facebook_login_button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <RelativeLayout
@@ -163,7 +159,7 @@
                 android:text="Explore"
                 android:typeface="serif" />
         </LinearLayout>
-  <!--
+        <!--
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -188,7 +184,7 @@
                  <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                >
+                >
         -->
 
         <ExpandableListView
@@ -198,16 +194,13 @@
             android:layout_weight="1"
             android:background="#ffffff" />
 
-
-            <Button
-                android:id="@+id/buttonLogout"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:text="Logout" />
-           
-
+        <Button
+            android:id="@+id/buttonLogout"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="Logout" />
     </LinearLayout>
 
 </FrameLayout>

@@ -2,7 +2,6 @@ package com.example.navtest.fragments;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -37,9 +36,6 @@ import com.example.model.FeedProvider;
 import com.example.navtest.MainActivity;
 import com.example.navtest.R;
 import com.example.navtest.adapters.ExpendableListViewAdapter;
-import com.facebook.model.GraphUser;
-import com.facebook.widget.LoginButton;
-import com.facebook.widget.LoginButton.UserInfoChangedCallback;
 import com.google.android.gms.common.SignInButton;
 
 @SuppressLint("NewApi")
@@ -51,7 +47,7 @@ public class FragmentLeftDrawer extends Fragment {
 	private static String[] titles = null;
 	private FragmentDrawerListener drawerListener;
 	private SignInButton btnSignIn;
-	private LoginButton loginButton;
+	private Button explorerNotLoggedin;
 	LinearLayout not_logged_in;
 	LinearLayout logged_in;
 	LinearLayout go_to_home;
@@ -95,29 +91,19 @@ public class FragmentLeftDrawer extends Fragment {
 			not_logged_in.setVisibility(View.VISIBLE);
 			if (logged_in != null)
 				logged_in.setVisibility(View.INVISIBLE);
+			explorerNotLoggedin=(Button)containerView.findViewById(R.id.explorer_not_loggedin);
 			btnSignIn = (SignInButton) containerView
 					.findViewById(R.id.btn_sign_in);
-			loginButton = (LoginButton) containerView
-					.findViewById(R.id.facebook_login_button);
-			loginButton.setReadPermissions(Arrays.asList("email"));
-			loginButton
-					.setUserInfoChangedCallback(new UserInfoChangedCallback() {
 
-						@Override
-						public void onUserInfoFetched(GraphUser user) {
-							if (user != null) {
-
-								// username.setText("You are currently logged in as "
-								// + user.getName());
-
-							} else {
-
-								// username.setText("You are not logged in.");
-
-							}
-
-						}
-					});
+			explorerNotLoggedin.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					((MainActivity) getActivity()).closeDrawer();
+					((MainActivity) getActivity()).displayView(3);
+				}
+			});
+		
 
 			// Button click listeners
 			btnSignIn.setOnClickListener(new OnClickListener() {

@@ -14,6 +14,7 @@ import org.jdom.Element;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,9 +30,12 @@ import android.widget.Toast;
 
 import com.example.model.Feed;
 import com.example.model.FeedProvider;
+import com.example.navtest.FeedItemDetailsActivity;
+import com.example.navtest.MainActivity;
 import com.example.navtest.R;
 import com.example.navtest.adapters.SectionedGridRecyclerViewAdapter;
 import com.example.navtest.adapters.SimpleAdapter;
+import com.example.navtest.adapters.SimpleAdapter.onGridCardItemClick;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndContent;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndEnclosure;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndEntry;
@@ -102,9 +106,18 @@ public class FragmentHomeFavorite extends Fragment {
 					getActivity(), R.layout.list_item_section_header,
 					R.id.lblListHeader, mRecyclerView, mAdapter);
 			mSectionedAdapter.setSections(sections.toArray(dummy));
-
+			mAdapter.setOnGridItemClickListener(new onGridCardItemClick() {
+				
+				@Override
+				public void gridItemClickListener(View v, int position) {
+					Intent intent=new Intent(((MainActivity)getActivity()),FeedItemDetailsActivity.class);
+					intent.putExtra("FEEDURL",(String)((Feed)v.getTag()).getTitle());
+					getActivity().startActivity(intent);		
+				}
+			});
 			// Apply this adapter to the RecyclerView
 			mRecyclerView.setAdapter(mSectionedAdapter);
+			
 		}
 	}
 

@@ -32,10 +32,6 @@ import com.example.navtest.fragments.FragmentLeftDrawer;
 import com.example.navtest.fragments.FragmentLeftDrawer.FragmentDrawerListener;
 import com.example.navtest.fragments.HomeFragment;
 import com.example.navtest.utils.VolleySingleton;
-import com.facebook.AppEventsLogger;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -61,11 +57,6 @@ public class MainActivity extends ActionBarActivity implements
 	private boolean mIntentInProgress;
 	private ConnectionResult mConnectionResult;
 	Toolbar toolbar;
-	// Create, automatically open (if applicable), save, and restore the
-	// Active Session in a way that is similar to Android UI lifecycles.
-	public UiLifecycleHelper uiHelper;
-	private Object FacebookSdk;
-
 	// volley request queue
 	public RequestQueue requestQueue;
 
@@ -76,15 +67,19 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_main);
+
 		// get instance of the requestQueue
 		requestQueue = VolleySingleton.getInstance(this).getRequestQueue();
 		imageLoader = VolleySingleton.getInstance(this).getImageLoader();
+
 		// As we're using a Toolbar, we should retrieve it and set it
 		// to be our ActionBar
 		toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setTitle("");
+
 		drawerFragment = (FragmentLeftDrawer) getSupportFragmentManager()
 				.findFragmentById(R.id.fragment_left_drawer);
 
@@ -94,10 +89,7 @@ public class MainActivity extends ActionBarActivity implements
 		// translucentStatusBar
 		// on KitKat.
 		drawerLayout = (DrawerLayout) findViewById(R.id.my_drawer_layout);
-
-		uiHelper = new UiLifecycleHelper(this, statusCallback);
-		uiHelper.onCreate(savedInstanceState);
-
+		
 		mGoogleApiClient = new GoogleApiClient.Builder(this)
 				.addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this).addApi(Plus.API)
@@ -119,18 +111,14 @@ public class MainActivity extends ActionBarActivity implements
 			drawerLayout.closeDrawer(Gravity.START);
 	}
 
-	private Session.StatusCallback statusCallback = new Session.StatusCallback() {
-
-		@Override
-		public void call(Session session, SessionState state,
-				Exception exception) {
-			if (state.isOpened()) {
-				Log.d("MainActivity", "Facebook session opened.");
-			} else if (state.isClosed()) {
-				Log.d("MainActivity", "Facebook session closed.");
-			}
+	public void openDrawer() {
+		if (drawerLayout.isDrawerOpen(Gravity.START)) {
+			drawerLayout.closeDrawer(Gravity.START);
 		}
-	};
+		drawerLayout.openDrawer(Gravity.END);
+
+	}
+
 	public boolean sharingIntent = false;
 
 	@Override
@@ -165,22 +153,6 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-
-		// Logs 'install' and 'app activate' App Events.
-		AppEventsLogger.activateApp(this);
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-
-		// Logs 'app deactivate' App Event.
-		AppEventsLogger.deactivateApp(this);
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
@@ -195,6 +167,9 @@ public class MainActivity extends ActionBarActivity implements
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			return true;
+		}
+		if (id == R.id.action_search) {
+			openDrawer();
 		}
 		return super.onOptionsItemSelected(item);
 	}

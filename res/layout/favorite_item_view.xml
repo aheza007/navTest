@@ -8,23 +8,28 @@
     android:layout_margin="2dp"
     card_view:cardCornerRadius="4dp" >
 
-    <com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/item_image"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/rounded_corner"
-        android:scaleType="fitXY" />
+        android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_margin="4dp"
-        android:background="#75000000"
-        android:gravity="left"
-        android:textColor="#FFFFFF"
-        android:textSize="12sp"
-        android:textStyle="normal" />
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/item_image"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@drawable/rounded_corner"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/primary_text"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>

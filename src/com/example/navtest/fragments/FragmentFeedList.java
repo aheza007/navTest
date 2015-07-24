@@ -47,9 +47,9 @@ public class FragmentFeedList extends Fragment implements
 		getData();
 		mFlipView.setOnFlipListener(this);
 		mFlipView.peakNext(false);
-		mFlipView.setOverFlipMode(OverFlipMode.RUBBER_BAND);
-		//mFlipView.setEmptyView(rootView.findViewById(R.id.empty_view));
+		mFlipView.setOverFlipMode(OverFlipMode.RUBBER_BAND);		
 		mFlipView.setOnOverFlipListener(this);
+
 		return rootView;
 	}
 

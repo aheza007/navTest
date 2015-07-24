@@ -12,7 +12,7 @@ public final class R {
 		public static final int overFlipMode = 0x7f010005;
 	}
 	public static final class drawable {
-		public static final int ic_launcher = 0x7f0200ae;
+		public static final int ic_launcher = 0x7f02007f;
 	}
 	public static final class id {
 		public static final int glow = 0x7f07000c;
