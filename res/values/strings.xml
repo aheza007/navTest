@@ -30,7 +30,7 @@
         <item>@drawable/health_image</item>
         <item>@drawable/business_image</item>
         <item>@drawable/people_image</item>
-    </array>
+    </array>
     -->
 
     <string-array name="category_name">
@@ -207,5 +207,7 @@
         <item>abc_good_morning_america_logo</item>
         <item>abc_news_logo</item>
     </string-array>
+
+    <string name="title_activity_more_feeds">MoreFeedsActivity</string>
 
 </resources>

@@ -28,6 +28,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.example.model.Feed;
 import com.example.model.FeedProvider;
 import com.example.navtest.FeedItemDetailsActivity;
@@ -36,6 +40,8 @@ import com.example.navtest.R;
 import com.example.navtest.adapters.SectionedGridRecyclerViewAdapter;
 import com.example.navtest.adapters.SimpleAdapter;
 import com.example.navtest.adapters.SimpleAdapter.onGridCardItemClick;
+import com.example.navtest.utils.ParseSyndFeeds;
+import com.example.navtest.utils.VolleySingleton;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndContent;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndEnclosure;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndEntry;
@@ -103,7 +109,7 @@ public class FragmentHomeFavorite extends Fragment {
 			SectionedGridRecyclerViewAdapter.Section[] dummy = new SectionedGridRecyclerViewAdapter.Section[sections
 					.size()];
 			SectionedGridRecyclerViewAdapter mSectionedAdapter = new SectionedGridRecyclerViewAdapter(
-					getActivity(), R.layout.list_item_section_header,
+					getActivity(), R.layout.grid_item_section_header,
 					R.id.lblListHeader, mRecyclerView, mAdapter);
 			mSectionedAdapter.setSections(sections.toArray(dummy));
 			mAdapter.setOnGridItemClickListener(new onGridCardItemClick() {
@@ -111,7 +117,7 @@ public class FragmentHomeFavorite extends Fragment {
 				@Override
 				public void gridItemClickListener(View v, int position) {
 					Intent intent=new Intent(((MainActivity)getActivity()),FeedItemDetailsActivity.class);
-					intent.putExtra("FEEDURL",(String)((Feed)v.getTag()).getTitle());
+					intent.putExtra("FEED_DESCRIPTION",(String)((Feed)v.getTag()).getDescription());
 					getActivity().startActivity(intent);		
 				}
 			});
@@ -146,13 +152,11 @@ public class FragmentHomeFavorite extends Fragment {
 		}
 	}
 
-	List<ProviderNameListsOfNews> mSectionNameOffest;
-	Map<String, List<SyndEntry>> allData = new HashMap<>();
-
+	public static Map<String, List<Feed>> allData = new HashMap<>();
+	List<ProviderNameListsOfNews>	mSectionNameOffest;
 	public List<Feed> parseFeed(List<SyndFeed> mFeeds) {
 		try {
 			mSectionNameOffest = new ArrayList<>();
-			;
 			List<Feed> feedResults = new ArrayList<>();
 			for (SyndFeed feed : mFeeds) {
 				int items = feed.getEntries() == null ? 0 : feed.getEntries()
@@ -161,18 +165,18 @@ public class FragmentHomeFavorite extends Fragment {
 				mSectionNameOffest.add(new ProviderNameListsOfNews(feed
 						.getTitle(), items));
 				int i = 0;
+				allData.put(feed.getTitle(), new ArrayList<Feed>());
 				for (final Iterator iter = feed.getEntries().iterator(); iter
 						.hasNext();) {
 					final SyndEntry entry = (SyndEntry) iter.next();
-					
+					Feed lFeed=ParseSyndFeeds.makeFeed(entry);
+					allData.get(feed.getTitle()).add(lFeed);
 					if (feedResults.size() < mFeeds.size() * GRID_ITEM_COUNT
 							&& i < GRID_ITEM_COUNT) {
 						i++;
-						feedResults.add(makeFeed(entry));
-
-					} else
-						break;
-					
+						feedResults.add(lFeed);
+						
+					} 
 				}
 				// All(feed.getEntries());
 			}
@@ -185,106 +189,7 @@ public class FragmentHomeFavorite extends Fragment {
 		}
 	}
 
-	@SuppressLint("NewApi")
-	private Feed makeFeed(SyndEntry feedItem){
-		Feed feed=new Feed();
-		String authors = "";
-		if (feedItem.getAuthors().size() > 0) {
-			for (Object author : feedItem.getAuthors()) {
-				authors += author + "|";
-			}
-		} else if (!feedItem.getAuthor().isEmpty())
-			authors = feedItem.getAuthor();
-		
-		List<Element> foreignMarkups = (List<Element>) feedItem
-				.getForeignMarkup();
-		String imgURL = "";
-		for (Element foreignMarkup : foreignMarkups) {
-			if (foreignMarkup.getAttribute("url") != null)
-				imgURL = foreignMarkup.getAttribute("url").getValue();
-			if (imgURL.contains("top-tease.jpg"))
-				imgURL = imgURL.replace("top-tease.jpg", "exlarge-169.jpg");
-			// read width and height
-		}
-		if (imgURL == "") {
-			List<SyndEnclosure> encls = feedItem.getEnclosures();
-			if (!encls.isEmpty()) {
-				for (SyndEnclosure e : encls) {
-					imgURL = e.getUrl().toString();
-				}
-			}
-		}
-		String Description = "";
-
-		if (feedItem.getDescription() == null) {
-
-			for (Iterator<?> it = feedItem.getContents().iterator(); it
-					.hasNext();) {
-				SyndContent syndContent = (SyndContent) it.next();
-
-				if (syndContent != null) {
-					Description = syndContent.getValue();
-				}
-			}
-		} else if (feedItem.getDescription() != null) {
-			Description = feedItem.getDescription().getValue();
-		}
-		
 	
-
-		int startImageLink = 0, imageEndTage = 0;
-		int endImageLink = 0;
-		String ImageUrl = "";
-		boolean hasImage = false;
-		if (Description.contains("<img")) {
-			hasImage = true;
-			startImageLink = Description.indexOf("src=",
-					Description.indexOf("<img"));
-			endImageLink = Description.indexOf('"',
-					startImageLink + "src=".length() + 1);
-			ImageUrl = Description.substring(startImageLink + 5,
-					endImageLink);
-
-			imageEndTage = Description.indexOf(">", endImageLink);
-		}
-		String descCont = Description
-				.substring(hasImage ? imageEndTage + 1 : 0)
-				.replaceAll("\\n", " ").replaceAll("&nbsp;", " ")
-				.replaceAll("&#160;", " ").trim();
-
-		if (descCont.contains("<p>")) {
-			descCont = descCont.substring(0, descCont.indexOf("</p>") + 4);
-		} else if (descCont.contains("<"))
-			descCont = descCont.substring(0, descCont.indexOf("<"));
-		if (ImageUrl != ""
-				&& (!(descCont.isEmpty() || descCont.equals(" ") || descCont
-						.equals("")) & descCont.length() > 20)) {
-			try {
-				URL url=new URL(ImageUrl);
-				feed.setImageUrl(ImageUrl);
-			} catch (MalformedURLException e) {
-				feed.setImageUrl("");
-			}
-		} else if (imgURL != "") {
-			try {
-				URL url=new URL(imgURL);
-				feed.setImageUrl(imgURL);
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			}
-
-		} else {
-			feed.setImageUrl("");
-		}
-		
-		feed.setAuthors(authors);
-		feed.setUrl(feedItem.getUri());
-		feed.setTitle(feedItem.getTitle());
-		feed.setDescription(Description);
-		
-		
-		return feed;
-	}
 	@SuppressLint("NewApi")
 	private void getData() {
 		try {
@@ -305,7 +210,8 @@ public class FragmentHomeFavorite extends Fragment {
 			for (String url : provs) {
 				urls[i] = url;
 				i++;
-			}
+			}			
+			
 			loadHomeNews
 					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, urls);
 
@@ -313,7 +219,31 @@ public class FragmentHomeFavorite extends Fragment {
 			e.printStackTrace();
 		}
 	}
+	
+	List<SyndFeed> feeds;
+	private void makeRequests(String[] urls){
+		feeds=new ArrayList<>();
+		for(String url:urls){
 
+			StringRequest request=new StringRequest(url, new Listener<String>() {
+
+				@Override
+				public void onResponse(String feedData) {// TODO Auto-generated method stub
+					
+				}
+			}, new ErrorListener() {
+
+				@Override
+				public void onErrorResponse(VolleyError arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			VolleySingleton.getInstance(getActivity().getApplicationContext()).getRequestQueue().add(request);
+		}
+	
+	}
+	
 	private class LoadHomeNewsTask extends
 			AsyncTask<String, String, List<SyndFeed>> {
 		Context mContext;

@@ -1,51 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/primary"
-    android:orientation="vertical"
-    android:paddingLeft="25dp"
-    android:paddingRight="25dp" >
+    android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/textViewMotto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="All the news that matters"
-        android:textColor="@color/primary_text"
-        android:textSize="24sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textViewSubMotto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textViewMotto"
-        android:layout_below="@+id/textViewMotto"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="7dp"
-        android:text="A single place for all your favorite lattest news"
-        android:textColor="@color/primary_text" />
-
-    <Button
-        android:id="@+id/buttonGoogle_login"
+    <RelativeLayout
+        android:id="@+id/login_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewSubMotto"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:background="#3369E8"
-        android:text="Login with Google" />
+        android:layout_height="match_parent"
+        android:background="@color/primary"
+        android:orientation="vertical"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:visibility="gone" >
 
-    <Button
-        android:id="@+id/buttonFacebook_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonGoogle_login"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="7dp"
-        android:background="#dfe3ee"
-        android:text="Login with Facebook" />
+        <TextView
+            android:id="@+id/textViewMotto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="All the news that matters"
+            android:textColor="@color/primary_text"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/textViewSubMotto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textViewMotto"
+            android:layout_below="@+id/textViewMotto"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="7dp"
+            android:text="A single place for all your favorite lattest news"
+            android:textColor="@color/primary_text" />
+
+        <Button
+            android:id="@+id/buttonGoogle_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewSubMotto"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:background="#3369E8"
+            android:text="Login with Google" />
+
+        <Button
+            android:id="@+id/buttonFacebook_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/buttonGoogle_login"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="7dp"
+            android:background="#dfe3ee"
+            android:text="Login with Facebook" />
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+         style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_gravity="center"/>
+
+</FrameLayout>

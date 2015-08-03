@@ -1,20 +1,22 @@
 package com.example.navtest;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.example.model.Feed;
 import com.example.navtest.fragments.FragmentFeedList;
+import com.example.navtest.utils.FeedParser;
+import com.example.navtest.utils.VolleySingleton;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed;
-import com.google.code.rome.android.repackaged.com.sun.syndication.io.FeedException;
-import com.google.code.rome.android.repackaged.com.sun.syndication.io.SyndFeedInput;
-import com.google.code.rome.android.repackaged.com.sun.syndication.io.XmlReader;
-import com.google.code.rome.android.repackaged.com.sun.syndication.io.XmlReaderException;
 
 public class GetRSSFeedTask extends AsyncTask<String, Integer, SyndFeed> {
 
@@ -33,18 +35,18 @@ public class GetRSSFeedTask extends AsyncTask<String, Integer, SyndFeed> {
 	protected void onPreExecute() {
 
 		super.onPreExecute();
-//		dialog = new ProgressDialog(mActivty);
-//		if (dialog != null) {
-//			dialog.setMessage("Loading...");
-//			dialog.show();
-//		}
+		// dialog = new ProgressDialog(mActivty);
+		// if (dialog != null) {
+		// dialog.setMessage("Loading...");
+		// dialog.show();
+		// }
 		mFragmentFeedList.mProgressBar.setVisibility(View.VISIBLE);
 	}
 
 	protected void onPostExecute(SyndFeed result) {
 		super.onPostExecute(result);
 
-		//dialog.dismiss();
+		// dialog.dismiss();
 		mFragmentFeedList.mProgressBar.setVisibility(View.INVISIBLE);
 		mFragmentFeedList.setAdapter(result);
 	}
@@ -53,34 +55,66 @@ public class GetRSSFeedTask extends AsyncTask<String, Integer, SyndFeed> {
 	protected SyndFeed doInBackground(String... params) {
 		categoryName = params[2];
 		feedProviderName = params[1];
-		return getRSS(params[0]);
+		getRSS(params[0]);
+		return feed;
 	}
 
-	private SyndFeed getRSS(String rss) {
+	// private SyndFeed getRSS(String rss) {
+	//
+	// URL feed_description = null;
+	// SyndFeed feed = null;
+	// try {
+	// Log.d("DEBUG", "Entered:" + rss);
+	// feed_description = new URL(rss);
+	// Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+	// SyndFeedInput input = new SyndFeedInput();
+//	 XmlReader reader=new XmlReader(feed_description);
+	// feed = input.build(reader);
+	//
+	// // return feed;
+	//
+	// } catch (MalformedURLException e) {
+	// e.printStackTrace();
+	// } catch (IllegalArgumentException e) {
+	// e.printStackTrace();
+	// } catch (FeedException e) {
+	// e.printStackTrace();
+	// } catch (XmlReaderException e) {
+	// e.printStackTrace();
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// return feed;
+	// }
+	SyndFeed feed = null;
 
-		URL feedUrl = null;
-		SyndFeed feed = null;
-		try {
-			Log.d("DEBUG", "Entered:" + rss);
-			feedUrl = new URL(rss);
-			Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-			SyndFeedInput input = new SyndFeedInput();
-			XmlReader reader=new XmlReader(feedUrl);
-			feed = input.build(reader);
+	@SuppressLint("NewApi")
+	private void getRSS(String url) {
 
-			// return feed;
+		StringRequest request = new StringRequest(url, new Listener<String>() {
 
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (FeedException e) {
-			e.printStackTrace();
-		} catch (XmlReaderException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return feed;
+			@Override
+			public void onResponse(String arg0) {
+				
+
+				try {
+
+					FeedParser parser = new FeedParser();
+					List<Feed> feeds=parser.parse(arg0);
+					Toast.makeText(mActivty, feeds.size(), Toast.LENGTH_LONG).show();
+				} catch (Exception e) {
+					
+					e.printStackTrace();
+				}
+
+			}
+		}, new ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError arg0) {
+
+			}
+		});
+		VolleySingleton.getInstance(mActivty).getRequestQueue().add(request);
 	}
 }

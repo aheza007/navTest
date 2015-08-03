@@ -93,7 +93,7 @@ public class FragmentExploreNews extends Fragment {
 									&& providerPerCategory
 											.containsKey(categoryName)) {
 
-								((MainActivity) getActivity()).selectedProvider = layoutIconsName
+								((MainActivity) getActivity()).mSelectedProvider = layoutIconsName
 										.getFavoriteProviders().get(
 												categoryName);
 								((MainActivity) getActivity()).displayView(1);

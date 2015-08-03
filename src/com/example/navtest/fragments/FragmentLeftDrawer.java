@@ -91,19 +91,19 @@ public class FragmentLeftDrawer extends Fragment {
 			not_logged_in.setVisibility(View.VISIBLE);
 			if (logged_in != null)
 				logged_in.setVisibility(View.INVISIBLE);
-			explorerNotLoggedin=(Button)containerView.findViewById(R.id.explorer_not_loggedin);
+			explorerNotLoggedin = (Button) containerView
+					.findViewById(R.id.explorer_not_loggedin);
 			btnSignIn = (SignInButton) containerView
 					.findViewById(R.id.btn_sign_in);
 
 			explorerNotLoggedin.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					((MainActivity) getActivity()).closeDrawer();
 					((MainActivity) getActivity()).displayView(3);
 				}
 			});
-		
 
 			// Button click listeners
 			btnSignIn.setOnClickListener(new OnClickListener() {
@@ -126,6 +126,8 @@ public class FragmentLeftDrawer extends Fragment {
 
 	}
 
+	LinearLayout mAddContentLayout;
+
 	public void setUp(int fragmentId, DrawerLayout drawerLayout,
 			final Toolbar toolbar, boolean isLoggedIn) {
 
@@ -134,7 +136,6 @@ public class FragmentLeftDrawer extends Fragment {
 			containerView = getActivity().findViewById(fragmentId);
 			not_logged_in = (LinearLayout) containerView
 					.findViewById(R.id.not_logged_in);
-
 			if (progress_bar_layout != null
 					&& progress_bar_layout.VISIBLE == View.VISIBLE)
 				progress_bar_layout.setVisibility(View.INVISIBLE);
@@ -148,13 +149,18 @@ public class FragmentLeftDrawer extends Fragment {
 					.findViewById(R.id.profile_email);
 			profile_email.setText(((MainActivity) getActivity()).email);
 			profile_name.setText(((MainActivity) getActivity()).personName);
-			new LoadProfileImage(profile_image)
-					.execute(((MainActivity) getActivity()).personPhotoUrl);
+			String photo_url = ((MainActivity) getActivity()).personPhotoUrl;
+			if (photo_url != null)
+				new LoadProfileImage(profile_image).execute(photo_url);
 			go_to_home = (LinearLayout) containerView
 					.findViewById(R.id.go_to_home);
 			go_to_explorer = (LinearLayout) containerView
 					.findViewById(R.id.go_to_explorer);
 
+			mAddContentLayout = (LinearLayout) containerView
+					.findViewById(R.id.go_to_add_content);
+
+			AddContentHomeShow();
 			go_to_home.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -162,6 +168,14 @@ public class FragmentLeftDrawer extends Fragment {
 					((MainActivity) getActivity()).closeDrawer();
 					((MainActivity) getActivity()).displayView(2);
 					// getData();
+				}
+			});
+			mAddContentLayout.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					((MainActivity) getActivity()).openDrawer();
+
 				}
 			});
 			go_to_explorer.setOnClickListener(new OnClickListener() {
@@ -187,7 +201,7 @@ public class FragmentLeftDrawer extends Fragment {
 					not_logged_in.setVisibility(View.VISIBLE);
 					logged_in.setVisibility(View.INVISIBLE);
 					((MainActivity) getActivity()).mSignInClicked = false;
-					((MainActivity) getActivity()).logedIn = false;
+					// ((MainActivity) getActivity()).logedIn = false;
 					((MainActivity) getActivity()).signOutFromGplus();
 				}
 			});
@@ -195,6 +209,20 @@ public class FragmentLeftDrawer extends Fragment {
 			logged_in.setVisibility(View.VISIBLE);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void AddContentHomeShow() {
+		if (listDataChild != null && listDataChild.size() > 0) {
+
+			go_to_home.setVisibility(View.VISIBLE);
+			mAddContentLayout.setVisibility(View.GONE);
+		} else {
+			go_to_home.setVisibility(View.GONE);
+			mAddContentLayout.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -262,8 +290,10 @@ public class FragmentLeftDrawer extends Fragment {
 						&& logged_in != null
 						&& (logged_in.getVisibility() == View.VISIBLE)
 						&& (drawerView
-								.findViewById(R.id.listView_favorite_news_feeds) != null))
+								.findViewById(R.id.listView_favorite_news_feeds) != null)) {
+					AddContentHomeShow();
 					prepareFavoriteListView();
+				}
 				getActivity().supportInvalidateOptionsMenu();
 			}
 
@@ -280,7 +310,7 @@ public class FragmentLeftDrawer extends Fragment {
 				toolbar.setAlpha(1 - slideOffset / 2);
 			}
 		};
-		
+
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		mDrawerLayout.post(new Runnable() {
 			@Override

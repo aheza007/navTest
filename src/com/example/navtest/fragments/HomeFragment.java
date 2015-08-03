@@ -7,37 +7,45 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.navtest.MainActivity;
 import com.example.navtest.R;
 
 public class HomeFragment extends Fragment {
-	 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
- 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
- 
-    }
- 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.home_fragment_not_loggedin, container, false);
- 
- 
-        // Inflate the layout for this fragment
-        return rootView;
-    }
- 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
- 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
+
+	public HomeFragment() {
+		// Required empty public constructor
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.home_fragment_not_loggedin,
+				container, false);
+		if (!((MainActivity) getActivity()).isAlreadyLoggedIn()) {
+			rootView.findViewById(R.id.progressBar).setVisibility(
+					View.INVISIBLE);
+			rootView.findViewById(R.id.login_layout)
+					.setVisibility(View.VISIBLE);
+			
+		}
+
+		// Inflate the layout for this fragment
+		return rootView;
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+	}
 }

@@ -17,11 +17,11 @@ public class LaunchActivity extends ActionBarActivity {
 
 			@Override
 			public void run() {
-				// Intent startMain=new
-				// Intent(LaunchActivity.this,MainActivity.class);
-				startActivity(new Intent(LaunchActivity.this,
-						MainActivity.class));
-
+				Intent startMain = new Intent(LaunchActivity.this,
+						MainActivity.class);
+				
+				startActivity(startMain);
+				finish();
 			}
 		}, 1000);
 	}

@@ -1,6 +1,5 @@
 package com.example.navtest.adapters;
 
-import java.security.spec.MGF1ParameterSpec;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -72,7 +71,7 @@ public class SimpleAdapter extends
 			if (url != null) {
 				holder.feedImageItem.setImageBitmap(null);
 				holder.feedImageItem.setImageUrl(url,
-						((MainActivity) mContext).imageLoader);
+						((MainActivity) mContext).mImageLoader);
 				holder.itemView.setTag(feedItem);
 				// holder.feedImageItem.setImageBitmap(null);
 				// Picasso.with(holder.feedImageItem.getContext()).cancelRequest(

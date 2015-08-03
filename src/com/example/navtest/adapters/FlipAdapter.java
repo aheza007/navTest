@@ -2,14 +2,12 @@ package com.example.navtest.adapters;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.jdom.Element;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.Html;
@@ -21,8 +19,8 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.model.Feed;
 import com.example.model.FeedProvider;
 import com.example.navtest.FeedItemDetailsActivity;
 import com.example.navtest.MainActivity;
@@ -36,92 +34,18 @@ import com.squareup.picasso.Picasso;
 @SuppressLint("NewApi")
 public class FlipAdapter extends BaseAdapter implements OnClickListener {
 
-	public interface Callback {
-		public void onPageRequested(int page);
-	}
-
-	static class Item {
-		static long id = 0;
-		String String_category = "News";
-
-		String String_time = "1h";
-		String String_feed_title = "Title";
-		String String_provider = "TechCrunch";
-		String String_authors = "Desire Aheza";
-		String String_feed_description = "afdddddddddddddddddddddddddddddddddddddddddd";
-		long mId;
-
-		public Item() {
-			mId = id++;
-			String_category = "News";
-		}
-
-		long getId() {
-			return mId;
-		}
-
-		public String getString_category() {
-			return String_category;
-		}
-
-		public void setString_category(String string_category) {
-			String_category = string_category;
-		}
-
-		public String getString_time() {
-			return String_time + " " + mId;
-		}
-
-		public void setString_time(String string_time) {
-			String_time = string_time;
-		}
-
-		public String getString_feed_title() {
-			return String_feed_title + " " + mId;
-		}
-
-		public void setString_feed_title(String string_feed_title) {
-			String_feed_title = string_feed_title;
-		}
-
-		public String getString_provider() {
-			return String_provider + " " + mId;
-		}
-
-		public void setString_provider(String string_provider) {
-			String_provider = string_provider;
-		}
-
-		public String getString_authors() {
-			return String_authors + " " + mId;
-		}
-
-		public void setString_authors(String string_authors) {
-			String_authors = string_authors;
-		}
-
-		public String getString_feed_description() {
-			return String_feed_description;
-		}
-
-		public void setString_feed_description(String string_feed_description) {
-			String_feed_description = string_feed_description;
-		}
-
-	}
-
 	private LayoutInflater inflater;
 	private Callback callback;
-	private List<Item> items = new ArrayList<Item>();
-	private List<SyndEntry> syndFeedsEntry;
+	private List<Feed> syndFeedsEntry;
 	MainActivity mContext;
 	FeedProvider mProvider = new FeedProvider();
 	static final int ViewBigPhoto = 0;
 	static final int ViewSmallPhoto = 0;
 	static boolean isBigPicture = false;
-//	static onFlipItemClick mFlipItemClickListener;
-	
-	public FlipAdapter(MainActivity context, List<SyndEntry> pitems) {
+
+	// static onFlipItemClick mFlipItemClickListener;
+
+	public FlipAdapter(MainActivity context, List<Feed> pitems) {
 		inflater = LayoutInflater.from(context);
 		mContext = context;
 		syndFeedsEntry = pitems;
@@ -158,127 +82,139 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 		return true;
 	}
 
-	SyndEntry feedItem = null;
+	Feed feedItem = null;
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 
-		feedItem = (SyndEntry) getItem(position);
+		feedItem = (Feed) getItem(position);
 
-		String authors = "";
-		if (feedItem.getAuthors().size() > 0) {
-			for (Object author : feedItem.getAuthors()) {
-				authors += author + "|";
-			}
-		} else if (!feedItem.getAuthor().isEmpty())
-			authors = feedItem.getAuthor();
-
-		List<Element> foreignMarkups = (List<Element>) feedItem
-				.getForeignMarkup();
-		String imgURL = "";
-		for (Element foreignMarkup : foreignMarkups) {
-			if (foreignMarkup.getAttribute("url") != null)
-				imgURL = foreignMarkup.getAttribute("url").getValue();
-				if(mProvider.getProviderName().equals("CNN"))
-					imgURL=imgURL.replace("top-tease.jpg", "exlarge-169.jpg");
-			// read width and height
-		}
-		if (imgURL == "") {
-			List<SyndEnclosure> encls = feedItem.getEnclosures();
-			if (!encls.isEmpty()) {
-				for (SyndEnclosure e : encls) {
-					imgURL = e.getUrl().toString();
-				}
-			}
-		}
-		String Description = "";
-
-		if (feedItem.getDescription() == null) {
-
-			for (Iterator<?> it = feedItem.getContents().iterator(); it
-					.hasNext();) {
-				SyndContent syndContent = (SyndContent) it.next();
-
-				if (syndContent != null) {
-					Description = syndContent.getValue();
-				}
-			}
-		} else if (feedItem.getDescription() != null) {
-			Description = feedItem.getDescription().getValue();
-		}
-
-		// convertView.setTag(R.id.imageView_feed_image,
-		// "<h1>" + feedItem.getTitle() + "</h1>" + feedItem.getAuthor()
-		// + "/" + feedItem.getPublishedDate() + "</br>"
-		// + Description);
-		int startImageLink = 0, imageEndTage = 0;
-		int endImageLink = 0;
-		String ImageUrl = "";
-		boolean hasImage = false;
-		if (Description.contains("<img")) {
-			hasImage = true;
-			startImageLink = Description.indexOf("src=",
-					Description.indexOf("<img"));
-			endImageLink = Description.indexOf('"',
-					startImageLink + "src=".length() + 1);
-			ImageUrl = Description.substring(startImageLink + 5, endImageLink);
-
-			imageEndTage = Description.indexOf(">", endImageLink);
-		}
-		String descCont = Description
-				.substring(hasImage ? imageEndTage + 1 : 0)
-				.replaceAll("\\n", " ").replaceAll("&nbsp;", " ")
-				.replaceAll("&#160;", " ").trim();
-
-		if (descCont.contains("<p>")) {
-			descCont = descCont.substring(0, descCont.indexOf("</p>") + 4);
-		} else if (descCont.contains("<"))
-			descCont = descCont.substring(0, descCont.indexOf("<"));
+		// String authors = "";
+		// if (feedItem.getAuthors().size() > 0) {
+		// for (Object author : feedItem.getAuthors()) {
+		// authors += author + "|";
+		// }
+		// } else if (!feedItem.getAuthor().isEmpty())
+		// authors = feedItem.getAuthor();
+		//
+		// List<Element> foreignMarkups = (List<Element>) feedItem
+		// .getForeignMarkup();
+		// String imgURL = "";
+		// for (Element foreignMarkup : foreignMarkups) {
+		// if (foreignMarkup.getAttribute("url") != null)
+		// imgURL = foreignMarkup.getAttribute("url").getValue();
+		// if (mProvider.getProviderName().equals("CNN"))
+		// imgURL = imgURL.replace("top-tease.jpg", "exlarge-169.jpg");
+		// // read width and height
+		// }
+		// if (imgURL == "") {
+		// List<SyndEnclosure> encls = feedItem.getEnclosures();
+		// if (!encls.isEmpty()) {
+		// for (SyndEnclosure e : encls) {
+		// imgURL = e.getUrl().toString();
+		// }
+		// }
+		// }
+		// String Description = "";
+		//
+		// if (feedItem.getDescription() == null) {
+		//
+		// for (Iterator<?> it = feedItem.getContents().iterator(); it
+		// .hasNext();) {
+		// SyndContent syndContent = (SyndContent) it.next();
+		//
+		// if (syndContent != null) {
+		// Description = syndContent.getValue();
+		// }
+		// }
+		// } else if (feedItem.getDescription() != null) {
+		// Description = feedItem.getDescription().getValue();
+		// }
+		//
+		// int startImageLink = 0, imageEndTage = 0;
+		// int endImageLink = 0;
+		// String ImageUrl = "";
+		// boolean hasImage = false;
+		// if (Description.contains("<img")) {
+		// hasImage = true;
+		// startImageLink = Description.indexOf("src=",
+		// Description.indexOf("<img"));
+		// endImageLink = Description.indexOf('"',
+		// startImageLink + "src=".length() + 1);
+		// ImageUrl = Description.substring(startImageLink + 5, endImageLink);
+		//
+		// imageEndTage = Description.indexOf(">", endImageLink);
+		// }
+		//
+		// String descCont = Description
+		// .substring(hasImage ? imageEndTage + 1 : 0)
+		// .replaceAll("\\n", " ").replaceAll("&nbsp;", " ")
+		// .replaceAll("&#160;", " ").trim();
+		//
+		// if (descCont.contains("<p>")) {
+		// descCont = descCont.substring(0, descCont.indexOf("</p>") + 4);
+		// } else if (descCont.contains("<"))
+		// descCont = descCont.substring(0, descCont.indexOf("<"));
+		int type = getItemViewType(position);
 
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = inflater.inflate(R.layout.page_news_feed, parent,
-					false);
-			initializeHolder(convertView, holder);
+			if (type == 0)
+				convertView = inflater.inflate(R.layout.page_news_feed, parent,
+						false);
+			else if (type == 1)
+				convertView = inflater.inflate(
+						R.layout.page_news_feed_second_view, parent, false);
+			initializeHolder(convertView, holder, type);
+
 		} else {
+
 			holder = (ViewHolder) convertView.getTag();
 		}
 
+		convertView.setTag(
+				R.id.textView_feed_description,
+				"<h1>" + feedItem.getTitle() + "</h1>" + feedItem.getAuthors()
+						+ "/" + feedItem.getPublishedOn() + "</br>"
+						+ feedItem.getDescription());
+		String ImageUrl = feedItem.getImageUrl();
+		String descCont = feedItem.getParseDescription();
+		holder.textView_time.setText(""+feedItem.getPublishedOn());
 		holder.textView_category.setText(mProvider.getCategoryName());
 		holder.textView_provider.setText(mProvider.getProviderName());
-		holder.textView_authors.setText(authors);
+		holder.textView_authors.setText(feedItem.getAuthors());
 		holder.textView_feed_title.setText(Html.fromHtml(feedItem.getTitle()));
-		holder.textView_feed_description.setText(trimTrailingWhitespace(Html
-				.fromHtml(descCont)));
+		if (holder.viewType == 0)
+			holder.textView_feed_description
+					.setText(trimTrailingWhitespace(Html.fromHtml(descCont)));
 
-		if (ImageUrl != ""
-				&& (!(descCont.isEmpty() || descCont.equals(" ") || descCont
-						.equals("")) & descCont.length() > 20)) {
+		if (hasImage(ImageUrl, descCont)) {
 			try {
 				loadImage(holder, ImageUrl);
 			} catch (MalformedURLException e) {
 				holder.imageView_feed_image.setVisibility(View.GONE);
 			}
-		} else if (imgURL != "") {
-			try {
-				loadImage(holder, imgURL);
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			}
+			// } else if (imgURL != "") {
+			// try {
+			// loadImage(holder, imgURL);
+			// } catch (MalformedURLException e) {
+			// e.printStackTrace();
+			// }
 
 		} else {
 			holder.imageView_feed_image.setImageResource(mProvider
 					.getProviderIcon());
 		}
-		//convertView.setTag(R.id.textView_feed_description, Description);
+		// convertView.setTag(R.id.textView_feed_description, Description);
 		holder.imageViewshare.setTag(R.id.imageView_feed_image, feedItem);
 		holder.imageViewshare.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// Launch the Google+ share dialog with attribution to your app.
-				SyndEntry feedItem=(SyndEntry) v.getTag(R.id.imageView_feed_image);
+				SyndEntry feedItem = (SyndEntry) v
+						.getTag(R.id.imageView_feed_image);
 				Uri feedUri = Uri.parse(feedItem.getUri());
 				Intent shareIntent = new PlusShare.Builder(mContext)
 						.setType("text/plain").setText(feedItem.getTitle())
@@ -288,9 +224,32 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 
 			}
 		});
-		
-		convertView.setTag(R.id.textView_feed_description, feedItem.getTitle());
+
+		holder.buttonReadMore.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Uri uri = Uri.parse(feedItem.getUrl());
+				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+				if (intent.resolveActivity(mContext.getPackageManager()) != null) {
+					mContext.startActivity(intent);
+				}
+			}
+		});
+		// convertView.setTag(R.id.textView_feed_description,
+		// feedItem.getUri());
 		return convertView;
+	}
+
+	/**
+	 * @param ImageUrl
+	 * @param descCont
+	 * @return
+	 */
+	private boolean hasImage(String ImageUrl, String descCont) {
+		return ImageUrl != ""
+				&& (!(descCont.isEmpty() || descCont.equals(" ") || descCont
+						.equals("")) & descCont.length() > 20);
 	}
 
 	private void loadImage(ViewHolder holder, String ImageUrl)
@@ -303,7 +262,7 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 				.into(holder.imageView_feed_image);
 	}
 
-	private void initializeHolder(View convertView, ViewHolder holder) {
+	private void initializeHolder(View convertView, ViewHolder holder, int type) {
 		holder.textView_category = (TextView) convertView
 				.findViewById(R.id.textView_category);
 		holder.textView_time = (TextView) convertView
@@ -315,23 +274,31 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 				.findViewById(R.id.textView_provider);
 		holder.textView_authors = (TextView) convertView
 				.findViewById(R.id.textView_authors);
-		holder.textView_feed_description = (TextView) convertView
-				.findViewById(R.id.textView_feed_description);
+		if (holder.viewType == 0)
+			holder.textView_feed_description = (TextView) convertView
+					.findViewById(R.id.textView_feed_description);
 		holder.imageView_feed_image = (ImageView) convertView
 				.findViewById(R.id.imageView_feed_image);
 		holder.imageViewshare = (ImageView) convertView
 				.findViewById(R.id.imageViewshare);
+		holder.buttonReadMore = (Button) convertView
+				.findViewById(R.id.buttonReadMore);
 		convertView.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-			 
-			//	Toast.makeText(mContext, "item Clicked: "+v.getTag(R.id.textView_feed_description), Toast.LENGTH_LONG).show();
-				Intent intent=new Intent(mContext,FeedItemDetailsActivity.class);
-				intent.putExtra("FEEDURL",(String)v.getTag(R.id.textView_feed_description));
-				mContext.startActivity(intent);	
+
+				// Toast.makeText(mContext,
+				// "item Clicked: "+v.getTag(R.id.textView_feed_description),
+				// Toast.LENGTH_LONG).show();
+				Intent intent = new Intent(mContext,
+						FeedItemDetailsActivity.class);
+				intent.putExtra("FEED_DESCRIPTION",
+						(String) v.getTag(R.id.textView_feed_description));
+				mContext.startActivity(intent);
 			}
 		});
+		holder.viewType = type;
 		convertView.setTag(holder);
 	}
 
@@ -349,7 +316,8 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 		return source.subSequence(0, i + 1);
 	}
 
-	static class ViewHolder  {
+	static class ViewHolder {
+		public int viewType;
 		TextView text;
 		TextView textView_category;
 		TextView textView_time;
@@ -360,7 +328,7 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 		TextView textView_feed_description;
 		Button buttonReadMore;
 		ImageView imageViewshare;
-	
+
 	}
 
 	@Override
@@ -386,32 +354,39 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 		}
 	}
 
-	public void add(SyndEntry entry) {
+	public void add(Feed entry) {
 		syndFeedsEntry.add(entry);
 		notifyDataSetChanged();
 	}
 
 	public void addItems(int amount) {
-		for (int i = 0; i < amount; i++) {
-			items.add(new Item());
-		}
-		notifyDataSetChanged();
+		// for (int i = 0; i < amount; i++) {
+		// items.add(new Item());
+		// }
+		// notifyDataSetChanged();
 	}
 
 	public void addItemsBefore(int amount) {
-		for (int i = 0; i < amount; i++) {
-			items.add(0, new Item());
-		}
-		notifyDataSetChanged();
+		// for (int i = 0; i < amount; i++) {
+		// items.add(0, new Item());
+		// }
+		// notifyDataSetChanged();
 	}
-	
-	//item click listener Interface
-//	
-//	public static interface onFlipItemClick {
-//		public void itemClick(View caller);
-//	}
-//	
-//	public void setOnItemClickListener(final onFlipItemClick flipItem){
-//		mFlipItemClickListener=flipItem;
-//	}
+
+	@Override
+	public int getViewTypeCount() {
+
+		return 2;
+	}
+
+	@Override
+	public int getItemViewType(int position) {
+
+		return ((Feed) getItem(position)).getDescription() != "" ? 0 : 1;
+	}
+
+	public interface Callback {
+		public void onPageRequested(int page);
+	}
+
 }

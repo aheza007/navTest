@@ -87,7 +87,7 @@ public class FragmentRightNavDrawer extends Fragment {
 
 			// load slide menu items
 			if (toolbar != null) {
-				// ((ActionBarActivity)getActivity()).setSupportActionBar(toolbar);
+				// ((ActionBarActivity)getActivity()).setSupportActionBar(mToolbar);
 				ImageView icon = new ImageView(getActivity());
 				// icon.setImageDrawable(getActivity().getDrawable(
 				// R.drawable.ic_action_search));
@@ -167,7 +167,7 @@ public class FragmentRightNavDrawer extends Fragment {
 										@Override
 										public void itemClick(View caller,
 												int position) {
-											((MainActivity) getActivity()).selectedProvider = feedProviders
+											((MainActivity) getActivity()).mSelectedProvider = feedProviders
 													.get(position);
 											((MainActivity) getActivity()).closeDrawer();
 											((MainActivity) getActivity())
