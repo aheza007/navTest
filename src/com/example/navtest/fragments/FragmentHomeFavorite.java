@@ -91,7 +91,7 @@ public class FragmentHomeFavorite extends Fragment {
 		entries = parseFeed(Iitems);
 		if (entries != null) {
 			// Your RecyclerView.Adapter
-			mAdapter = new SimpleAdapter(getActivity(), entries);
+			mAdapter = new SimpleAdapter(getActivity(),R.layout.favorite_item_view,entries);
 
 			// This is the code to provide a sectioned grid
 			List<SectionedGridRecyclerViewAdapter.Section> sections = new ArrayList<SectionedGridRecyclerViewAdapter.Section>();

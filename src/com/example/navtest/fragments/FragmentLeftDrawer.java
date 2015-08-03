@@ -217,9 +217,9 @@ public class FragmentLeftDrawer extends Fragment {
 	 */
 	private void AddContentHomeShow() {
 		if (listDataChild != null && listDataChild.size() > 0) {
-
 			go_to_home.setVisibility(View.VISIBLE);
 			mAddContentLayout.setVisibility(View.GONE);
+			((MainActivity) getActivity()).displayView(2);
 		} else {
 			go_to_home.setVisibility(View.GONE);
 			mAddContentLayout.setVisibility(View.VISIBLE);
@@ -291,8 +291,8 @@ public class FragmentLeftDrawer extends Fragment {
 						&& (logged_in.getVisibility() == View.VISIBLE)
 						&& (drawerView
 								.findViewById(R.id.listView_favorite_news_feeds) != null)) {
-					AddContentHomeShow();
 					prepareFavoriteListView();
+					AddContentHomeShow();
 				}
 				getActivity().supportInvalidateOptionsMenu();
 			}
@@ -300,7 +300,16 @@ public class FragmentLeftDrawer extends Fragment {
 			@Override
 			public void onDrawerClosed(View drawerView) {
 				super.onDrawerClosed(drawerView);
+
+				LinearLayout layout = (LinearLayout) drawerView
+						.findViewById(R.id.my_right_drawer_linearlayout);
+				if (layout != null && layout.VISIBLE == View.VISIBLE) {
+					drawerView.findViewById(R.id.my_right_drawer_linearlayout)
+							.setVisibility(View.INVISIBLE);
+					drawerView.invalidate();
+				}
 				getActivity().supportInvalidateOptionsMenu();
+
 			}
 
 			@SuppressLint("NewApi")

@@ -213,9 +213,9 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 			@Override
 			public void onClick(View v) {
 				// Launch the Google+ share dialog with attribution to your app.
-				SyndEntry feedItem = (SyndEntry) v
+				Feed feedItem = (Feed) v
 						.getTag(R.id.imageView_feed_image);
-				Uri feedUri = Uri.parse(feedItem.getUri());
+				Uri feedUri = Uri.parse(feedItem.getUrl());
 				Intent shareIntent = new PlusShare.Builder(mContext)
 						.setType("text/plain").setText(feedItem.getTitle())
 						.setContentUrl(feedUri).getIntent();
@@ -229,6 +229,8 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 
 			@Override
 			public void onClick(View v) {
+				Feed feedItem = (Feed) v
+						.getTag(R.id.imageView_feed_image);
 				Uri uri = Uri.parse(feedItem.getUrl());
 				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 				if (intent.resolveActivity(mContext.getPackageManager()) != null) {

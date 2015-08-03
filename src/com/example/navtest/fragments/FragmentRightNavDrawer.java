@@ -147,13 +147,7 @@ public class FragmentRightNavDrawer extends Fragment {
 
 											@Override
 											public void onClick(View v) {
-												if (mLinearLayout != null
-														&& rightRecyclerView != null) {
-													mLinearLayout
-															.setVisibility(View.INVISIBLE);
-													rightRecyclerView
-															.setVisibility(View.VISIBLE);
-												}
+												closeProviderListView();
 											}
 										});
 								mLinearLayout.setVisibility(View.VISIBLE);
@@ -203,5 +197,15 @@ public class FragmentRightNavDrawer extends Fragment {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		// inflater.inflate(R.menu.launch, menu);
 
+	}
+
+	private void closeProviderListView() {
+		if (mLinearLayout != null
+				&& rightRecyclerView != null) {
+			mLinearLayout
+					.setVisibility(View.INVISIBLE);
+			rightRecyclerView
+					.setVisibility(View.VISIBLE);
+		}
 	}
 }

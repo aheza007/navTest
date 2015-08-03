@@ -27,12 +27,15 @@ public class ListRecyclerAdapter extends
 	List<FeedProvider> mProviders;
 	onListItemClick mListItemClicked;
 	private Context mContext;
-	public ListRecyclerAdapter(Context context,List<FeedProvider> providers) {
+	SharedPreferences pref;
+
+	public ListRecyclerAdapter(Context context, List<FeedProvider> providers) {
 		if (providers == null) {
 			throw new IllegalArgumentException("Data model Can't be null");
 		}
-		this.mContext=context;
+		this.mContext = context;
 		mProviders = providers;
+		pref = PreferenceManager.getDefaultSharedPreferences(mContext);
 	}
 
 	public class ListItemViewHolder extends RecyclerView.ViewHolder implements
@@ -40,18 +43,25 @@ public class ListRecyclerAdapter extends
 		ImageView iconProvider;
 		TextView providerName;
 		ImageView addToFavorite;
+
 		public ListItemViewHolder(View listItem) {
 			super(listItem);
 			providerName = (TextView) listItem.findViewById(R.id.providerName);
-			iconProvider=(ImageView)listItem.findViewById(R.id.imageView_provider_icon);
-			addToFavorite=(ImageView)listItem.findViewById(R.id.imageView_add_to_favorite);
+			iconProvider = (ImageView) listItem
+					.findViewById(R.id.imageView_provider_icon);
+			addToFavorite = (ImageView) listItem
+					.findViewById(R.id.imageView_add_to_favorite);
+			if (!(pref.getBoolean(MainActivity.SIGNED_IN_GOOGLE, false) && ((MainActivity) mContext).personName != null))
+				addToFavorite.setVisibility(View.GONE);
+			else
+				addToFavorite.setVisibility(View.VISIBLE);
 			listItem.setOnClickListener(this);
 		}
 
 		@Override
 		public void onClick(View caller) {
 			if (mListItemClicked != null) {
-				mListItemClicked.itemClick(caller,this.getLayoutPosition());
+				mListItemClicked.itemClick(caller, this.getLayoutPosition());
 			}
 		}
 
@@ -64,24 +74,35 @@ public class ListRecyclerAdapter extends
 
 	@Override
 	public void onBindViewHolder(ListItemViewHolder viewHolder, int position) {
-		final FeedProvider lProvider=mProviders.get(position);
+		final FeedProvider lProvider = mProviders.get(position);
 		viewHolder.iconProvider.setImageResource(lProvider.getProviderIcon());
 		viewHolder.providerName.setText(lProvider.getProviderName());
-		viewHolder.addToFavorite.setOnClickListener(new OnClickListener() {
-			
-			@SuppressLint("NewApi")
-			@Override
-			public void onClick(View v) {
-				
-				SharedPreferences pref=PreferenceManager.getDefaultSharedPreferences(mContext);
-				Set<String> set=pref.getStringSet(MainActivity.FAVORITE_NEWS, new HashSet<String>());
-				set.add(lProvider.getCategoryName()+MainActivity.SPLITER+lProvider.getProviderName()+MainActivity.SPLITER+lProvider.getProviderUrl()+MainActivity.SPLITER+lProvider.getProviderIcon());
-				SharedPreferences.Editor editor=pref.edit();
-				editor.remove(MainActivity.FAVORITE_NEWS).commit();
-				editor.putStringSet(MainActivity.FAVORITE_NEWS, set);
-				Log.d(MainActivity.FAVORITE_NEWS, editor.commit()+" favorite items "+pref.getStringSet(MainActivity.FAVORITE_NEWS, new HashSet<String>()).size());
-			}
-		});
+		if (viewHolder.addToFavorite.VISIBLE == View.VISIBLE) {
+			viewHolder.addToFavorite.setOnClickListener(new OnClickListener() {
+
+				@SuppressLint("NewApi")
+				@Override
+				public void onClick(View v) {
+
+					Set<String> set = pref.getStringSet(
+							MainActivity.FAVORITE_NEWS, new HashSet<String>());
+					set.add(lProvider.getCategoryName() + MainActivity.SPLITER
+							+ lProvider.getProviderName()
+							+ MainActivity.SPLITER + lProvider.getProviderUrl()
+							+ MainActivity.SPLITER
+							+ lProvider.getProviderIcon());
+					SharedPreferences.Editor editor = pref.edit();
+					editor.remove(MainActivity.FAVORITE_NEWS).commit();
+					editor.putStringSet(MainActivity.FAVORITE_NEWS, set);
+					Log.d(MainActivity.FAVORITE_NEWS,
+							editor.commit()
+									+ " favorite items "
+									+ pref.getStringSet(
+											MainActivity.FAVORITE_NEWS,
+											new HashSet<String>()).size());
+				}
+			});
+		}
 	}
 
 	@Override

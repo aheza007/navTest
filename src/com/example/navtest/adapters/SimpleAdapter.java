@@ -17,6 +17,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.example.model.Feed;
 import com.example.navtest.MainActivity;
 import com.example.navtest.R;
+import com.example.navtest.utils.VolleySingleton;
 
 public class SimpleAdapter extends
 		RecyclerView.Adapter<SimpleAdapter.SimpleViewHolder> {
@@ -26,7 +27,7 @@ public class SimpleAdapter extends
 	private int mCurrentItemId = 0;
 	LruCache<String, Bitmap> imageCache;
 	static onGridCardItemClick mGridItemClick;
-
+	int mItemView;
 	public static class SimpleViewHolder extends RecyclerView.ViewHolder
 			implements OnClickListener {
 		public TextView title;
@@ -49,14 +50,15 @@ public class SimpleAdapter extends
 		}
 	}
 
-	public SimpleAdapter(Context context, List<Feed> mLists) {
+	public SimpleAdapter(Context context,int itemVw, List<Feed> mLists) {
 		mContext = context;
 		mItems = mLists;
+		mItemView=itemVw;
 	}
 
 	public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View view = LayoutInflater.from(mContext).inflate(
-				R.layout.favorite_item_view, parent, false);
+				mItemView, parent, false);
 		return new SimpleViewHolder(view);
 	}
 
@@ -70,8 +72,9 @@ public class SimpleAdapter extends
 			String url = feedItem.getImageUrl();
 			if (url != null) {
 				holder.feedImageItem.setImageBitmap(null);
+				
 				holder.feedImageItem.setImageUrl(url,
-						((MainActivity) mContext).mImageLoader);
+						VolleySingleton.getInstance(mContext).getImageLoader());
 				holder.itemView.setTag(feedItem);
 				// holder.feedImageItem.setImageBitmap(null);
 				// Picasso.with(holder.feedImageItem.getContext()).cancelRequest(
