@@ -125,7 +125,7 @@ public class FragmentFeedList extends Fragment implements
 	public void onFlippedToPage(FlipView v, int position, long id) {
 		Log.i("pageflip", "Page: " + position);
 		// if (position > mFlipView.getPageCount() - 3
-		// && mFlipView.getPageCount() < feedResults.size()) {
+		// && mFlipView.getPageCount() < mFeedResults.size()) {
 		// mAdapter.addItems(5);
 		// }
 	}

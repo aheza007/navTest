@@ -34,6 +34,7 @@ import com.example.navtest.fragments.FragmentHomeFavorite;
 import com.example.navtest.fragments.FragmentHomeNoFavorites;
 import com.example.navtest.fragments.FragmentLeftDrawer;
 import com.example.navtest.fragments.FragmentLeftDrawer.FragmentDrawerListener;
+import com.example.navtest.fragments.FragmentMyFavoriteNews;
 import com.example.navtest.fragments.HomeFragment;
 import com.example.navtest.utils.VolleySingleton;
 import com.google.android.gms.common.ConnectionResult;
@@ -51,6 +52,7 @@ public class MainActivity extends ActionBarActivity implements
 	public static final String USER_EMAIL = "USER_EMAIL";
 	public static final String USER_PHOTO_URL = "USER_PHOTO_URL";
 	public static final String FAVORITE_NEWS = "FAVORITE_NEWS";
+	public static final String MY_FAVORITE_FEED_URL="MY_FAVORITE_FEED_URL";
 	public static final String SIGNED_IN_GOOGLE = "SIGNED_IN_GOOGLE";
 	public static final String SPLITER = "F2:57:C7;com.example.97:BB:48:6D.navtest.fragments";
 	private static final int RC_SIGN_IN = 0;
@@ -125,9 +127,9 @@ public class MainActivity extends ActionBarActivity implements
 			mEditor.putBoolean(SIGNED_IN_GOOGLE, false);
 		}
 
-//		if (!mSharedPref.contains(USERNAME)) {
-//			mEditor.putString(USERNAME, null);
-//		}
+		if (!mSharedPref.contains(MY_FAVORITE_FEED_URL)) {
+			mEditor.putString(MY_FAVORITE_FEED_URL, null);
+		}
 //
 //		if (!mSharedPref.contains(USER_EMAIL)) {
 //			mEditor.putString(USER_EMAIL, null);
@@ -243,6 +245,12 @@ public class MainActivity extends ActionBarActivity implements
 			fragment = new FragmentHomeNoFavorites();
 			// title = getString(R.string.title_fragment_home_favorite);
 			tag = "FragmentHomeNoFavorites";
+			canBackStack = false;
+			break;
+		case 5:
+			fragment = new FragmentMyFavoriteNews();
+			// title = getString(R.string.title_fragment_home_favorite);
+			tag = "FragmentMyFavoriteNews";
 			canBackStack = false;
 			break;
 		default:
@@ -405,10 +413,9 @@ public class MainActivity extends ActionBarActivity implements
 		if (isSignedIn && personName!=null&&personPhotoUrl!=null) {
 			
 			if (!hasCalled) {
-			//	storeLoginStatus(true);
-				if(mSharedPref.getStringSet(
-					FAVORITE_NEWS, new HashSet<String>()).size()>0)
-					displayView(2);
+				if(mSharedPref.getString(
+					MY_FAVORITE_FEED_URL, null)!=null)
+					displayView(5);
 				else
 					displayView(4);				
 				mDrawerFragment.setUp(R.id.fragment_left_drawer, mDrawerLayout,

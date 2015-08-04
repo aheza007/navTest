@@ -74,32 +74,36 @@ public class ListRecyclerAdapter extends
 
 	@Override
 	public void onBindViewHolder(ListItemViewHolder viewHolder, int position) {
-		final FeedProvider lProvider = mProviders.get(position);
+		FeedProvider lProvider = mProviders.get(position);
 		viewHolder.iconProvider.setImageResource(lProvider.getProviderIcon());
 		viewHolder.providerName.setText(lProvider.getProviderName());
+		viewHolder.addToFavorite.setTag(lProvider);
 		if (viewHolder.addToFavorite.VISIBLE == View.VISIBLE) {
 			viewHolder.addToFavorite.setOnClickListener(new OnClickListener() {
 
 				@SuppressLint("NewApi")
 				@Override
 				public void onClick(View v) {
-
+					FeedProvider lProvider =(FeedProvider)v.getTag();
 					Set<String> set = pref.getStringSet(
 							MainActivity.FAVORITE_NEWS, new HashSet<String>());
-					set.add(lProvider.getCategoryName() + MainActivity.SPLITER
+					String newProvider=lProvider.getCategoryName() + MainActivity.SPLITER
 							+ lProvider.getProviderName()
 							+ MainActivity.SPLITER + lProvider.getProviderUrl()
 							+ MainActivity.SPLITER
-							+ lProvider.getProviderIcon());
+							+ lProvider.getProviderIcon();
+					set.add(newProvider);
 					SharedPreferences.Editor editor = pref.edit();
 					editor.remove(MainActivity.FAVORITE_NEWS).commit();
 					editor.putStringSet(MainActivity.FAVORITE_NEWS, set);
+					editor.putString(MainActivity.MY_FAVORITE_FEED_URL, newProvider);
 					Log.d(MainActivity.FAVORITE_NEWS,
 							editor.commit()
 									+ " favorite items "
 									+ pref.getStringSet(
 											MainActivity.FAVORITE_NEWS,
 											new HashSet<String>()).size());
+					((MainActivity)mContext).displayView(5);
 				}
 			});
 		}

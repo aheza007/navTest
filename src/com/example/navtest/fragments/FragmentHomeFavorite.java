@@ -195,22 +195,7 @@ public class FragmentHomeFavorite extends Fragment {
 		try {
 			LoadHomeNewsTask loadHomeNews = new LoadHomeNewsTask(
 					this.getActivity());
-			Iterator<Entry<String, List<FeedProvider>>> it = FragmentLeftDrawer.listDataChild
-					.entrySet().iterator();
-			List<String> provs = new ArrayList<>();
-
-			while (it.hasNext()) {
-				Map.Entry pair = (Map.Entry) it.next();
-				List<FeedProvider> p = (List<FeedProvider>) pair.getValue();
-				provs.add(p.get(0).getProviderUrl());
-				// it.remove(); // avoids a ConcurrentModificationException
-			}
-			String[] urls = new String[provs.size()];
-			int i = 0;
-			for (String url : provs) {
-				urls[i] = url;
-				i++;
-			}			
+			String[] urls = getFeedUrls();			
 			
 			loadHomeNews
 					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, urls);
@@ -219,7 +204,31 @@ public class FragmentHomeFavorite extends Fragment {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * @return
+	 */
+	private String[] getFeedUrls() {
+		Iterator<Entry<String, List<FeedProvider>>> it = FragmentLeftDrawer.listDataChild
+				.entrySet().iterator();
+		List<String> provs = new ArrayList<>();
+
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry) it.next();
+			List<FeedProvider> p = (List<FeedProvider>) pair.getValue();
+			provs.add(p.get(0).getProviderUrl());
+			// it.remove(); // avoids a ConcurrentModificationException
+		}
+		String[] urls = new String[provs.size()];
+		int i = 0;
+		for (String url : provs) {
+			urls[i] = url;
+			i++;
+		}
+		return urls;
+	}
 	
+
 	List<SyndFeed> feeds;
 	private void makeRequests(String[] urls){
 		feeds=new ArrayList<>();
@@ -292,7 +301,7 @@ public class FragmentHomeFavorite extends Fragment {
 				}
 				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				mProgressBar.setVisibility(View.INVISIBLE);
 				e.printStackTrace();
 			}
 		}

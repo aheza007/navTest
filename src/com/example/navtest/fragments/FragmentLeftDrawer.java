@@ -57,6 +57,7 @@ public class FragmentLeftDrawer extends Fragment {
 	ExpendableListViewAdapter listAdapter;
 	ExpandableListView mListView;
 	List<String> listDataHeader;
+	private static boolean mFavoriteDispl=false;
 	public static HashMap<String, List<FeedProvider>> listDataChild;
 
 	HashMap<String, FeedProvider> urlProvider;
@@ -219,7 +220,7 @@ public class FragmentLeftDrawer extends Fragment {
 		if (listDataChild != null && listDataChild.size() > 0) {
 			go_to_home.setVisibility(View.VISIBLE);
 			mAddContentLayout.setVisibility(View.GONE);
-			((MainActivity) getActivity()).displayView(2);
+			//((MainActivity) getActivity()).displayView(2);
 		} else {
 			go_to_home.setVisibility(View.GONE);
 			mAddContentLayout.setVisibility(View.VISIBLE);

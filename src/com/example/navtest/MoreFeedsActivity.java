@@ -10,22 +10,27 @@ import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 public class MoreFeedsActivity extends ActionBarActivity {
 
 	RecyclerView mRecyclerView;
 	SimpleAdapter mAdapter;
-	public ImageLoader mImageLoader;
+	ProgressBar mProgressBar;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mImageLoader = VolleySingleton.getInstance(this).getImageLoader();
-		setContentView(R.layout.activity_more_feeds);
-		mRecyclerView=(RecyclerView)findViewById(R.id.list_favorite);
-		LinearLayoutManager layoutManager=new LinearLayoutManager(this);
+		setContentView(R.layout.layout_display_more_feeds);
+		mRecyclerView = (RecyclerView) findViewById(R.id.list_favorite);
+		mProgressBar = (ProgressBar) findViewById(R.id.progressBar_fetchingData);
+		LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 		mRecyclerView.setLayoutManager(layoutManager);
-		mAdapter=new SimpleAdapter(this.getApplicationContext(),R.layout.long_list_favorite_item_view, MainActivity.feeds);
+		mAdapter = new SimpleAdapter(this.getApplicationContext(),
+				R.layout.long_list_favorite_item_view, MainActivity.feeds);
 		mRecyclerView.setAdapter(mAdapter);
+		mProgressBar.setVisibility(View.GONE);
 	}
 
 	@Override
