@@ -76,12 +76,6 @@ public class SimpleAdapter extends
 				holder.feedImageItem.setImageUrl(url,
 						VolleySingleton.getInstance(mContext).getImageLoader());
 				holder.itemView.setTag(feedItem);
-				// holder.feedImageItem.setImageBitmap(null);
-				// Picasso.with(holder.feedImageItem.getContext()).cancelRequest(
-				// holder.feedImageItem);
-				// Picasso.with(holder.feedImageItem.getContext())
-				// .load(feedItem.getImageUrl())
-				// .into(holder.feedImageItem);
 			}
 		} catch (Exception e) {
 

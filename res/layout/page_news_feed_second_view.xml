@@ -25,14 +25,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="News" />
+            android:text="News"
+            android:textColor="@color/primary_text" />
 
         <TextView
             android:id="@+id/textView_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="3h ago" />
+            android:text="3h ago"
+            android:textColor="@color/primary_text" />
     </RelativeLayout>
     
     <LinearLayout
@@ -48,7 +50,8 @@
             android:paddingBottom="5dp"
             android:text="Apple Says “We Hear You Taylor Swift”, Will Pay Musicians During Free Trial"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@color/primary_text" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,14 +63,16 @@
                 android:id="@+id/textView_provider"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TechCruch" />
+                android:text="TechCruch"
+                android:textColor="@color/primary_text" />
 
             <TextView
                 android:id="@+id/textView_authors"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
-                android:text="David and Monako Suarez" />
+                android:text="David and Monako Suarez"
+                android:textColor="@color/primary_text" />
         </LinearLayout>
 
         <RelativeLayout
@@ -82,7 +87,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:text="Read more" />
+                android:text="Read more" 
+                android:textColor="@color/primary_text"/>
 
             <ImageView
                 android:id="@+id/imageViewshare"

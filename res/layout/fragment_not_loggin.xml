@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:gravity="center"
+            android:textColor="@color/primary_text"
             android:text="Welcome to newsTracker" />
 
         <Button
@@ -39,6 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:gravity="center"
+            android:textColor="@color/primary_text"
             android:text="Login to presonalize your news" />
 
         <com.google.android.gms.common.SignInButton
@@ -59,6 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_toRightOf="@+id/progressBar"
+            android:textColor="@color/primary_text"
             android:text="Signing in" />
 
         <ProgressBar
@@ -135,6 +138,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="7dp"
+                android:textColor="@color/primary_text"
                 android:text="Home"
                 android:typeface="serif" />
         </LinearLayout>
@@ -157,6 +161,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="7dp"
                 android:text="Add Content"
+                android:textColor="@color/primary_text"
                 android:typeface="serif" />
         </LinearLayout>
 
@@ -178,6 +183,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="7dp"
                 android:text="Explore"
+                android:textColor="@color/primary_text"
                 android:typeface="serif" />
         </LinearLayout>
         <!--

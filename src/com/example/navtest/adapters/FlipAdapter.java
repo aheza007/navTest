@@ -89,73 +89,7 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 		ViewHolder holder;
 
 		feedItem = (Feed) getItem(position);
-
-		// String authors = "";
-		// if (feedItem.getAuthors().size() > 0) {
-		// for (Object author : feedItem.getAuthors()) {
-		// authors += author + "|";
-		// }
-		// } else if (!feedItem.getAuthor().isEmpty())
-		// authors = feedItem.getAuthor();
-		//
-		// List<Element> foreignMarkups = (List<Element>) feedItem
-		// .getForeignMarkup();
-		// String imgURL = "";
-		// for (Element foreignMarkup : foreignMarkups) {
-		// if (foreignMarkup.getAttribute("url") != null)
-		// imgURL = foreignMarkup.getAttribute("url").getValue();
-		// if (mProvider.getProviderName().equals("CNN"))
-		// imgURL = imgURL.replace("top-tease.jpg", "exlarge-169.jpg");
-		// // read width and height
-		// }
-		// if (imgURL == "") {
-		// List<SyndEnclosure> encls = feedItem.getEnclosures();
-		// if (!encls.isEmpty()) {
-		// for (SyndEnclosure e : encls) {
-		// imgURL = e.getUrl().toString();
-		// }
-		// }
-		// }
-		// String Description = "";
-		//
-		// if (feedItem.getDescription() == null) {
-		//
-		// for (Iterator<?> it = feedItem.getContents().iterator(); it
-		// .hasNext();) {
-		// SyndContent syndContent = (SyndContent) it.next();
-		//
-		// if (syndContent != null) {
-		// Description = syndContent.getValue();
-		// }
-		// }
-		// } else if (feedItem.getDescription() != null) {
-		// Description = feedItem.getDescription().getValue();
-		// }
-		//
-		// int startImageLink = 0, imageEndTage = 0;
-		// int endImageLink = 0;
-		// String ImageUrl = "";
-		// boolean hasImage = false;
-		// if (Description.contains("<img")) {
-		// hasImage = true;
-		// startImageLink = Description.indexOf("src=",
-		// Description.indexOf("<img"));
-		// endImageLink = Description.indexOf('"',
-		// startImageLink + "src=".length() + 1);
-		// ImageUrl = Description.substring(startImageLink + 5, endImageLink);
-		//
-		// imageEndTage = Description.indexOf(">", endImageLink);
-		// }
-		//
-		// String descCont = Description
-		// .substring(hasImage ? imageEndTage + 1 : 0)
-		// .replaceAll("\\n", " ").replaceAll("&nbsp;", " ")
-		// .replaceAll("&#160;", " ").trim();
-		//
-		// if (descCont.contains("<p>")) {
-		// descCont = descCont.substring(0, descCont.indexOf("</p>") + 4);
-		// } else if (descCont.contains("<"))
-		// descCont = descCont.substring(0, descCont.indexOf("<"));
+		
 		int type = getItemViewType(position);
 
 		if (convertView == null) {
@@ -208,6 +142,7 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 		}
 		// convertView.setTag(R.id.textView_feed_description, Description);
 		holder.imageViewshare.setTag(R.id.imageView_feed_image, feedItem);
+		holder.buttonReadMore.setTag(R.id.imageView_feed_image, feedItem);
 		holder.imageViewshare.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -224,7 +159,7 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 
 			}
 		});
-
+		
 		holder.buttonReadMore.setOnClickListener(new OnClickListener() {
 
 			@Override

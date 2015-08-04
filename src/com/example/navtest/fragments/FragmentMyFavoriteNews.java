@@ -8,9 +8,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.example.model.Feed;
+import com.example.navtest.ActivityPageNewsFeed;
+import com.example.navtest.FeedItemDetailsActivity;
 import com.example.navtest.MainActivity;
 import com.example.navtest.R;
 import com.example.navtest.adapters.SimpleAdapter;
+import com.example.navtest.adapters.SimpleAdapter.onGridCardItemClick;
 import com.example.navtest.utils.ParseSyndFeeds;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndEntry;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed;
@@ -20,6 +23,7 @@ import com.google.code.rome.android.repackaged.com.sun.syndication.io.XmlReader;
 import com.google.code.rome.android.repackaged.com.sun.syndication.io.XmlReaderException;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -27,6 +31,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +56,7 @@ public class FragmentMyFavoriteNews extends Fragment {
 				.findViewById(R.id.list_favorite);
 		mProgressBar = (ProgressBar) rootView
 				.findViewById(R.id.progressBar_fetchingData);
+
 		LinearLayoutManager layoutManager = new LinearLayoutManager(
 				this.getActivity());
 		mRecyclerView.setLayoutManager(layoutManager);
@@ -60,9 +66,9 @@ public class FragmentMyFavoriteNews extends Fragment {
 
 	private void getDataNews() {
 		try {
-			String favoriteDetail = PreferenceManager.getDefaultSharedPreferences(
-					getActivity()).getString(MainActivity.MY_FAVORITE_FEED_URL,
-					null);
+			String favoriteDetail = PreferenceManager
+					.getDefaultSharedPreferences(getActivity()).getString(
+							MainActivity.MY_FAVORITE_FEED_URL, null);
 			String[] items = favoriteDetail.split(MainActivity.SPLITER);
 			String providerCategory = (String) items[0];
 			String providerName = items[1];
@@ -70,25 +76,39 @@ public class FragmentMyFavoriteNews extends Fragment {
 			String providerIcon = items[3];
 			if (providerLink != null) {
 				LoadNewsFeedTask getNews = new LoadNewsFeedTask(getActivity());
-				getNews.execute(new String[]{providerLink});
+				getNews.execute(new String[] { providerLink });
 			}
 		} catch (Exception e) {
-			
+
 			e.printStackTrace();
 		}
 	}
 
-	private void setAdapter(SyndFeed pEntry){
+	private void setAdapter(SyndFeed pEntry) {
 		try {
-			mAdapter = new SimpleAdapter(
-					this.getActivity().getApplicationContext(),
+			mAdapter = new SimpleAdapter(this.getActivity()
+					.getApplicationContext(),
 					R.layout.long_list_favorite_item_view, parseFeed(pEntry));
 			mRecyclerView.setAdapter(mAdapter);
+
+			mAdapter.setOnGridItemClickListener(new onGridCardItemClick() {
+
+				@Override
+				public void gridItemClickListener(View v, int position) {
+					Intent intent = new Intent(((MainActivity) getActivity()),
+							ActivityPageNewsFeed.class);
+					Bundle bundle=new Bundle();
+					bundle.putParcelable("FEED_ITEM", (Feed)v.getTag());
+					intent.putExtras(bundle);
+					getActivity().startActivity(intent);
+				}
+			});
 		} catch (Exception e) {
-			
+
 			e.printStackTrace();
 		}
 	}
+
 	private List<Feed> parseFeed(SyndFeed pFeed) {
 		try {
 			mFeedResults = new ArrayList<>();
@@ -126,10 +146,10 @@ public class FragmentMyFavoriteNews extends Fragment {
 				results = getRSS(params[0]);
 
 			} catch (Exception e) {
-				
+
 				e.printStackTrace();
 			}
-			
+
 			return results;
 		}
 

@@ -20,7 +20,7 @@ public class FeedItemDetailsActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		getWindow().requestFeature(Window.FEATURE_PROGRESS);
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_feed_item_details);
+		setContentView(R.layout.activity_feed_item_more_details);
 		webview = (WebView) findViewById(R.id.webview_feed_details);
 //		progressBar_fetchingData = (ProgressBar) findViewById(R.id.progressBar_fetchingData);
 		feed_description = getIntent().getStringExtra("FEED_DESCRIPTION");

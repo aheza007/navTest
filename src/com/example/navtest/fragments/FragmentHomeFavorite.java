@@ -34,6 +34,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.model.Feed;
 import com.example.model.FeedProvider;
+import com.example.navtest.ActivityPageNewsFeed;
 import com.example.navtest.FeedItemDetailsActivity;
 import com.example.navtest.MainActivity;
 import com.example.navtest.R;
@@ -116,9 +117,12 @@ public class FragmentHomeFavorite extends Fragment {
 				
 				@Override
 				public void gridItemClickListener(View v, int position) {
-					Intent intent=new Intent(((MainActivity)getActivity()),FeedItemDetailsActivity.class);
-					intent.putExtra("FEED_DESCRIPTION",(String)((Feed)v.getTag()).getDescription());
-					getActivity().startActivity(intent);		
+					Intent intent = new Intent(((MainActivity) getActivity()),
+							ActivityPageNewsFeed.class);
+					Bundle bundle=new Bundle();
+					bundle.putParcelable("FEED_ITEM", (Feed)v.getTag());
+					intent.putExtras(bundle);
+					getActivity().startActivity(intent);	
 				}
 			});
 			// Apply this adapter to the RecyclerView

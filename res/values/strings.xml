@@ -30,7 +30,7 @@
         <item>@drawable/health_image</item>
         <item>@drawable/business_image</item>
         <item>@drawable/people_image</item>
-    </array>
+    </array>
     -->
 
     <string-array name="category_name">
@@ -209,5 +209,6 @@
     </string-array>
 
     <string name="title_activity_more_feeds">MoreFeedsActivity</string>
+    <string name="title_activity_activity_page_news_feed">ActivityPageNewsFeed</string>
 
 </resources>

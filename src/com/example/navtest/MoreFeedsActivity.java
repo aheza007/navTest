@@ -7,6 +7,7 @@ import com.example.navtest.utils.VolleySingleton;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +24,8 @@ public class MoreFeedsActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.layout_display_more_feeds);
+		Toolbar toolBar=(Toolbar)findViewById(R.id.my_awesome_toolbar);
+		toolBar.setVisibility(View.VISIBLE);
 		mRecyclerView = (RecyclerView) findViewById(R.id.list_favorite);
 		mProgressBar = (ProgressBar) findViewById(R.id.progressBar_fetchingData);
 		LinearLayoutManager layoutManager = new LinearLayoutManager(this);
