@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
+import android.text.style.LineHeightSpan.WithDensity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,7 +28,10 @@ public class SimpleAdapter extends
 	private int mCurrentItemId = 0;
 	LruCache<String, Bitmap> imageCache;
 	static onGridCardItemClick mGridItemClick;
+	static int ITEM_VIEW_WITH_IMAGE = 1;
+	static int ITEM_VIEW_NO_IMAGE = 2;
 	int mItemView;
+
 	public static class SimpleViewHolder extends RecyclerView.ViewHolder
 			implements OnClickListener {
 		public TextView title;
@@ -46,20 +50,59 @@ public class SimpleAdapter extends
 			if (mGridItemClick != null)
 				mGridItemClick.gridItemClickListener(v,
 						this.getLayoutPosition());
-
 		}
 	}
 
-	public SimpleAdapter(Context context,int itemVw, List<Feed> mLists) {
+	// public static class SimpleViewHolderNoImage extends
+	// RecyclerView.ViewHolder
+	// implements OnClickListener {
+	// public TextView title;
+	// public NetworkImageView feedImageItem;
+	//
+	// public SimpleViewHolderNoImage(View view) {
+	// super(view);
+	// title = (TextView) view.findViewById(R.id.title);
+	// feedImageItem = (NetworkImageView) view
+	// .findViewById(R.id.item_image);
+	// view.setOnClickListener(this);
+	// }
+	//
+	// @Override
+	// public void onClick(View v) {
+	// if (mGridItemClick != null)
+	// mGridItemClick.gridItemClickListener(v,
+	// this.getLayoutPosition());
+	// }
+	// }
+
+	@Override
+	public int getItemViewType(int position) {
+		Feed feedItem = (Feed) mItems.get(position);
+		String feedImageUrl=feedItem.getImageUrl();
+		int whichView=feedItem.getImageUrl().length()>0? ITEM_VIEW_WITH_IMAGE
+				: ITEM_VIEW_NO_IMAGE;
+		return whichView;
+	}
+
+	public SimpleAdapter(Context context, int itemVw, List<Feed> mLists) {
 		mContext = context;
 		mItems = mLists;
-		mItemView=itemVw;
+		mItemView = itemVw;
 	}
 
 	public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(mContext).inflate(
-				mItemView, parent, false);
-		return new SimpleViewHolder(view);
+		View view;
+		SimpleViewHolder holder;
+		if (viewType == ITEM_VIEW_WITH_IMAGE) {
+			view = LayoutInflater.from(mContext).inflate(mItemView, parent,
+					false);
+			holder = new SimpleViewHolder(view);
+		} else {
+			view = LayoutInflater.from(mContext).inflate(
+					R.layout.favorite_item_view_no_photo, parent, false);
+			holder = new SimpleViewHolder(view);
+		}
+		return holder;
 	}
 
 	@SuppressLint("NewApi")
@@ -68,13 +111,17 @@ public class SimpleAdapter extends
 
 		try {
 			Feed feedItem = (Feed) mItems.get(position);
-			holder.title.setText(feedItem.getTitle().toString());
+			
+			if(feedItem.getImageUrl().length()==0 &&feedItem.getParseDescription().length()>0)
+				holder.title.setText(feedItem.getParseDescription().toString());
+			else
+				holder.title.setText(feedItem.getTitle().toString());
 			String url = feedItem.getImageUrl();
 			if (url != null) {
 				holder.feedImageItem.setImageBitmap(null);
-				
-				holder.feedImageItem.setImageUrl(url,
-						VolleySingleton.getInstance(mContext).getImageLoader());
+
+				holder.feedImageItem.setImageUrl(url, VolleySingleton
+						.getInstance(mContext).getImageLoader());
 				holder.itemView.setTag(feedItem);
 			}
 		} catch (Exception e) {

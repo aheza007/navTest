@@ -48,19 +48,6 @@ public class ParseSyndFeeds {
 				}
 			}
 		}
-		String html1 = feedItem.getContents().toString();
-		String html2 = feedItem.getDescription().toString();
-		Document doc = null;
-		String description = "";
-		if (html1 != null && html1=="[]") {
-			doc = Jsoup.parse(html1);
-			description = doc.body().text();
-		} 
-		if (html2 != null) {
-			doc = Jsoup.parse(html2);
-			description = doc.body().text();
-		} else
-			doc = null;
 
 		String Description = "";
 
@@ -101,6 +88,7 @@ public class ParseSyndFeeds {
 			descCont = descCont.substring(0, descCont.indexOf("</p>") + 4);
 		} else if (descCont.contains("<"))
 			descCont = descCont.substring(0, descCont.indexOf("<"));
+		
 		if (ImageUrl != ""
 				&& (!(descCont.isEmpty() || descCont.equals(" ") || descCont
 						.equals("")) & descCont.length() > 20)) {
@@ -121,6 +109,24 @@ public class ParseSyndFeeds {
 		} else {
 
 			feed.setImageUrl("");
+		}
+		if (descCont == "" || descCont.length() < 5) {
+			String html1 = feedItem.getContents().toString();
+			String html2 = feedItem.getDescription().toString();
+			Document doc = null;
+			int startIndex=("SyndContentImpl.value=").length();
+			String endIndex="SyndContentImpl.type";
+			if (html1 != null && html1 != "[]") {
+				doc = Jsoup.parse(html1);
+				descCont = doc.body().text();
+				descCont=descCont.substring(startIndex, descCont.indexOf(endIndex));
+			}
+			if (html2 != null && html2 != "[]") {
+				doc = Jsoup.parse(html2);
+				descCont = doc.body().text();	
+				descCont=descCont.substring(startIndex, descCont.indexOf(endIndex));
+			} else
+				doc = null;
 		}
 
 		feed.setAuthors(authors);

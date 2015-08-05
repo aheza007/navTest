@@ -95,6 +95,7 @@ public class FragmentLeftDrawer extends Fragment {
 			not_logged_in.setVisibility(View.VISIBLE);
 			if (logged_in != null)
 				logged_in.setVisibility(View.INVISIBLE);
+			manageProgressBarLayout();
 			explorerNotLoggedin = (Button) containerView
 					.findViewById(R.id.explorer_not_loggedin);
 			btnSignIn = (SignInButton) containerView
@@ -148,9 +149,7 @@ public class FragmentLeftDrawer extends Fragment {
 			containerView = getActivity().findViewById(fragmentId);
 			not_logged_in = (LinearLayout) containerView
 					.findViewById(R.id.not_logged_in);
-			if (progress_bar_layout != null
-					&& progress_bar_layout.VISIBLE == View.VISIBLE)
-				progress_bar_layout.setVisibility(View.INVISIBLE);
+			manageProgressBarLayout();
 			logged_in = (LinearLayout) containerView
 					.findViewById(R.id.logged_in);
 			ImageView profile_image = (ImageView) containerView
@@ -222,6 +221,12 @@ public class FragmentLeftDrawer extends Fragment {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void manageProgressBarLayout() {
+		if (progress_bar_layout != null
+				&& progress_bar_layout.VISIBLE == View.VISIBLE)
+			progress_bar_layout.setVisibility(View.INVISIBLE);
 	}
 
 	/**

@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -144,15 +145,15 @@ public class MainActivity extends ActionBarActivity implements
 	public boolean checkPlayServices() {
 		int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 		if (status != ConnectionResult.SUCCESS) {
-//			 if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
-//			 showErrorDialog(status);
-//			 } else {
+			// if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
+			// showErrorDialog(status);
+			// } else {
 			Toast.makeText(
 					this,
 					"Install Google Play service, To use the full features of the app",
 					Toast.LENGTH_LONG).show();
 			// finish();
-//			 }
+			// }
 			return false;
 		}
 		return true;
@@ -224,9 +225,10 @@ public class MainActivity extends ActionBarActivity implements
 
 		if (requestCode == REQUEST_CODE_RECOVER_PLAY_SERVICES) {
 			if (responseCode == RESULT_CANCELED) {
-				Toast.makeText(this, "Install Google Play services, To use this features",
+				Toast.makeText(this,
+						"Install Google Play services, To use this features",
 						Toast.LENGTH_SHORT).show();
-				//finish();
+				// finish();
 			}
 		}
 		super.onActivityResult(requestCode, responseCode, intent);
@@ -238,6 +240,7 @@ public class MainActivity extends ActionBarActivity implements
 
 		if (mDrawerLayout.isDrawerOpen(Gravity.START)) {
 			mDrawerLayout.closeDrawer(Gravity.START);
+
 		} else if (mDrawerLayout.isDrawerOpen(Gravity.END)) {
 			mDrawerLayout.closeDrawer(Gravity.END);
 		} else {
@@ -246,6 +249,14 @@ public class MainActivity extends ActionBarActivity implements
 			super.onBackPressed();
 		}
 
+	}
+
+	private void handleProgressBarInLeftDrawer() {
+		if (!isAlreadyLoggedIn() && personName == null
+				&& personPhotoUrl == null) {
+			mDrawerFragment.setUp(R.id.fragment_left_drawer, mDrawerLayout,
+					mToolbar);
+		}
 	}
 
 	@Override
@@ -376,6 +387,12 @@ public class MainActivity extends ActionBarActivity implements
 				// resolve all
 				// errors until the user is signed in, or they cancel.
 				resolveSignInError();
+			} else {
+				if (result != null
+						&& result.SIGN_IN_REQUIRED == ConnectionResult.SIGN_IN_REQUIRED
+						&& result.CANCELED == ConnectionResult.CANCELED) {
+					handleProgressBarInLeftDrawer();
+				}
 			}
 		}
 
@@ -403,8 +420,9 @@ public class MainActivity extends ActionBarActivity implements
 	 * Sign-in into google
 	 * */
 	public void signInWithGplus() {
+		mSignInClicked = true;
 		if (!mGoogleApiClient.isConnecting()) {
-			mSignInClicked = true;
+			// mSignInClicked = true;
 			resolveSignInError();
 		}
 	}

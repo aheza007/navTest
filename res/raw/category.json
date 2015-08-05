@@ -78,7 +78,7 @@
                 {"providername":"BBC Business","link":"http://feeds.bbci.co.uk/news/video_and_audio/business/rss.xml"}]},
 
    {"People":[
-			{"providername":"ABC Travel News","link":"http://feeds.abcnews.com/abcnews/travelheadlines"}]},
+			{"providername":"ABC Travel News","link":"http://feeds.abcnews.com/abcnews/travelheadlines"},
 		    {"providername":"US Magazine", "link":"http://www.usmagazine.com/celebrity_news/rss"},
 		    {"providername":"CNN Students News", "link":"http://rss.cnn.com/services/podcasting/studentnews/rss.xml"},
 		    {"providername":"Reuters Entertainment News", "link":"http://feeds.reuters.com/reuters/entertainment"},
@@ -86,6 +86,5 @@
             {"providername":"TechCruch Social", "link":"http://feeds.feedburner.com/TechCrunch/social"},
             {"providername":"BBC Entertainment","link":"http://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml"},
             {"providername":"CNN Living","link":"http://rss.cnn.com/rss/cnn_living.rss "},
-            {"providername":"ABC Good Morning America","link":"http://feeds.abcnews.com/abcnews/gmaheadlines"}
-                    
-        ]}
+            {"providername":"ABC Good Morning America","link":"http://feeds.abcnews.com/abcnews/gmaheadlines"}]}
+	]}

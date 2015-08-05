@@ -3,18 +3,24 @@ package com.example.navtest;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.model.Feed;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.plus.PlusShare;
 import com.squareup.picasso.Picasso;
 
 public class ActivityPageNewsFeed extends ActionBarActivity {
@@ -62,9 +68,47 @@ public class ActivityPageNewsFeed extends ActionBarActivity {
 		mTextView_provider = (TextView) findViewById(R.id.textView_provider);
 		mTextView_authors = (TextView) findViewById(R.id.textView_authors);
 		mTextView_feed_description = (TextView) findViewById(R.id.textView_feed_description);
-		mButtonReadMore = (Button) findViewById(R.id.button_read_more);
+		mButtonReadMore = (Button) findViewById(R.id.buttonReadMore);
 		mImageViewshare = (ImageView) findViewById(R.id.imageViewshare);
+		mImageViewshare.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				int status = GooglePlayServicesUtil
+						.isGooglePlayServicesAvailable(ActivityPageNewsFeed.this);
+				if (status == ConnectionResult.SUCCESS) {
+					// Launch the Google+ share dialog with attribution to your
+					// app.
+					if (mFeed!=null) {
+					Uri feedUri = Uri.parse(mFeed.getUrl());
+					Intent shareIntent = new PlusShare.Builder(ActivityPageNewsFeed.this)
+							.setType("text/plain").setText(mFeed.getTitle())
+							.setContentUrl(feedUri).getIntent();
+					//sharingIntent = true;
+					startActivityForResult(shareIntent, 0);
+					}
+				}
+				else
+					Toast.makeText(ActivityPageNewsFeed.this, "Install Google Play services, To use this features",
+							Toast.LENGTH_LONG).show();   
+			}
+		});
+
+		mButtonReadMore.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (mFeed!=null) {
+					//Feed feedItem = (Feed) v.getTag(R.id.imageView_feed_image);
+					Uri uri = Uri.parse(mFeed.getUrl());
+					Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+					if (intent.resolveActivity(ActivityPageNewsFeed.this
+							.getPackageManager()) != null) {
+						startActivity(intent);
+					}
+				}
+			}
+		});
 	}
 
 	private void displayItem() {
