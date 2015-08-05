@@ -19,12 +19,15 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.model.Feed;
 import com.example.model.FeedProvider;
 import com.example.navtest.FeedItemDetailsActivity;
 import com.example.navtest.MainActivity;
 import com.example.navtest.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.plus.PlusShare;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndContent;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndEnclosure;
@@ -89,7 +92,7 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 		ViewHolder holder;
 
 		feedItem = (Feed) getItem(position);
-		
+
 		int type = getItemViewType(position);
 
 		if (convertView == null) {
@@ -114,7 +117,7 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 						+ feedItem.getDescription());
 		String ImageUrl = feedItem.getImageUrl();
 		String descCont = feedItem.getParseDescription();
-		holder.textView_time.setText(""+feedItem.getPublishedOn());
+		holder.textView_time.setText("" + feedItem.getPublishedOn());
 		holder.textView_category.setText(mProvider.getCategoryName());
 		holder.textView_provider.setText(mProvider.getProviderName());
 		holder.textView_authors.setText(feedItem.getAuthors());
@@ -147,25 +150,31 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 
 			@Override
 			public void onClick(View v) {
-				// Launch the Google+ share dialog with attribution to your app.
-				Feed feedItem = (Feed) v
-						.getTag(R.id.imageView_feed_image);
-				Uri feedUri = Uri.parse(feedItem.getUrl());
-				Intent shareIntent = new PlusShare.Builder(mContext)
-						.setType("text/plain").setText(feedItem.getTitle())
-						.setContentUrl(feedUri).getIntent();
-				mContext.sharingIntent = true;
-				mContext.startActivityForResult(shareIntent, 0);
+				int status = GooglePlayServicesUtil
+						.isGooglePlayServicesAvailable(mContext);
+				if (status == ConnectionResult.SUCCESS) {
+					// Launch the Google+ share dialog with attribution to your
+					// app.
+					Feed feedItem = (Feed) v.getTag(R.id.imageView_feed_image);
+					Uri feedUri = Uri.parse(feedItem.getUrl());
+					Intent shareIntent = new PlusShare.Builder(mContext)
+							.setType("text/plain").setText(feedItem.getTitle())
+							.setContentUrl(feedUri).getIntent();
+					mContext.sharingIntent = true;
+					mContext.startActivityForResult(shareIntent, 0);
 
+				}
+				else
+					Toast.makeText(mContext, "Install Google Play services, To use this features",
+							Toast.LENGTH_LONG).show();   
 			}
 		});
-		
+
 		holder.buttonReadMore.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Feed feedItem = (Feed) v
-						.getTag(R.id.imageView_feed_image);
+				Feed feedItem = (Feed) v.getTag(R.id.imageView_feed_image);
 				Uri uri = Uri.parse(feedItem.getUrl());
 				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 				if (intent.resolveActivity(mContext.getPackageManager()) != null) {

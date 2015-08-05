@@ -5,9 +5,12 @@ import java.util.HashSet;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -52,7 +55,8 @@ public class MainActivity extends ActionBarActivity implements
 	public static final String USER_EMAIL = "USER_EMAIL";
 	public static final String USER_PHOTO_URL = "USER_PHOTO_URL";
 	public static final String FAVORITE_NEWS = "FAVORITE_NEWS";
-	public static final String MY_FAVORITE_FEED_URL="MY_FAVORITE_FEED_URL";
+	public static final String MY_FAVORITE_FEED_URL = "MY_FAVORITE_FEED_URL";
+	static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
 	public static final String SIGNED_IN_GOOGLE = "SIGNED_IN_GOOGLE";
 	public static final String SPLITER = "F2:57:C7;com.example.97:BB:48:6D.navtest.fragments";
 	private static final int RC_SIGN_IN = 0;
@@ -72,8 +76,8 @@ public class MainActivity extends ActionBarActivity implements
 	// volley request queue
 	public RequestQueue mRequestQueue;
 
-	public static List<Feed> feeds=new ArrayList<Feed>();
-	
+	public static List<Feed> feeds = new ArrayList<Feed>();
+
 	// ImageLoader
 	public ImageLoader mImageLoader;
 
@@ -103,14 +107,60 @@ public class MainActivity extends ActionBarActivity implements
 		// translucentStatusBar
 		// on KitKat.
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.my_drawer_layout);
-
 		mGoogleApiClient = new GoogleApiClient.Builder(this)
 				.addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this).addApi(Plus.API)
 				.addScope(Plus.SCOPE_PLUS_LOGIN).build();
 		setupSharedPreference();
-		
+
 		updateUI(mSharedPref.getBoolean(SIGNED_IN_GOOGLE, false));
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (isOnline()) {
+			if (checkPlayServices()) {
+
+			}
+		} else {
+			Toast.makeText(this,
+					" Can't connect, Are you connected to the Internet",
+					Toast.LENGTH_LONG).show();
+			finish();
+		}
+	}
+
+	protected boolean isOnline() {
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo netInfo = cm.getActiveNetworkInfo();
+		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean checkPlayServices() {
+		int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+		if (status != ConnectionResult.SUCCESS) {
+//			 if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
+//			 showErrorDialog(status);
+//			 } else {
+			Toast.makeText(
+					this,
+					"Install Google Play service, To use the full features of the app",
+					Toast.LENGTH_LONG).show();
+			// finish();
+//			 }
+			return false;
+		}
+		return true;
+	}
+
+	public void showErrorDialog(int code) {
+		GooglePlayServicesUtil.getErrorDialog(code, this,
+				REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
 	}
 
 	/**
@@ -130,13 +180,13 @@ public class MainActivity extends ActionBarActivity implements
 		if (!mSharedPref.contains(MY_FAVORITE_FEED_URL)) {
 			mEditor.putString(MY_FAVORITE_FEED_URL, null);
 		}
-//
-//		if (!mSharedPref.contains(USER_EMAIL)) {
-//			mEditor.putString(USER_EMAIL, null);
-//		}
-//		if (!mSharedPref.contains(USER_PHOTO_URL)) {
-//			mEditor.putString(USER_PHOTO_URL, null);
-//		}
+		//
+		// if (!mSharedPref.contains(USER_EMAIL)) {
+		// mEditor.putString(USER_EMAIL, null);
+		// }
+		// if (!mSharedPref.contains(USER_PHOTO_URL)) {
+		// mEditor.putString(USER_PHOTO_URL, null);
+		// }
 	}
 
 	public void closeDrawer() {
@@ -159,7 +209,7 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void onActivityResult(int requestCode, int responseCode,
 			Intent intent) {
-		super.onActivityResult(requestCode, responseCode, intent);
+
 		if (!sharingIntent && requestCode == RC_SIGN_IN) {
 			if (responseCode != RESULT_OK) {
 				mSignInClicked = false;
@@ -171,6 +221,15 @@ public class MainActivity extends ActionBarActivity implements
 				mGoogleApiClient.connect();
 			}
 		}
+
+		if (requestCode == REQUEST_CODE_RECOVER_PLAY_SERVICES) {
+			if (responseCode == RESULT_CANCELED) {
+				Toast.makeText(this, "Install Google Play services, To use this features",
+						Toast.LENGTH_SHORT).show();
+				//finish();
+			}
+		}
+		super.onActivityResult(requestCode, responseCode, intent);
 	}
 
 	@SuppressLint("RtlHardcoded")
@@ -182,8 +241,8 @@ public class MainActivity extends ActionBarActivity implements
 		} else if (mDrawerLayout.isDrawerOpen(Gravity.END)) {
 			mDrawerLayout.closeDrawer(Gravity.END);
 		} else {
-			if(hasCalled)
-				hasCalled=false;
+			if (hasCalled)
+				hasCalled = false;
 			super.onBackPressed();
 		}
 
@@ -262,8 +321,8 @@ public class MainActivity extends ActionBarActivity implements
 			FragmentTransaction fragmentTransaction = fragmentManager
 					.beginTransaction();
 			fragmentTransaction.replace(R.id.container_body, fragment);
-//			if (canBackStack)
-//				fragmentTransaction.addToBackStack(null);
+			// if (canBackStack)
+			// fragmentTransaction.addToBackStack(null);
 			fragmentTransaction.commit();
 
 		}
@@ -280,9 +339,9 @@ public class MainActivity extends ActionBarActivity implements
 	 * @return
 	 */
 	public boolean isAlreadyLoggedIn() {
-//		boolean val = mSharedPref.getString(USERNAME, null) == null
-//				&& mSharedPref.getString(USER_EMAIL, null) == null;
-		boolean val=mSharedPref.getBoolean(SIGNED_IN_GOOGLE, false);
+		// boolean val = mSharedPref.getString(USERNAME, null) == null
+		// && mSharedPref.getString(USER_EMAIL, null) == null;
+		boolean val = mSharedPref.getBoolean(SIGNED_IN_GOOGLE, false);
 		return val;
 	}
 
@@ -328,7 +387,7 @@ public class MainActivity extends ActionBarActivity implements
 		// Get user's information
 		getProfileInformation();
 		// Update the UI after signin
-		logedIn=mSharedPref.getBoolean(SIGNED_IN_GOOGLE, false);
+		logedIn = mSharedPref.getBoolean(SIGNED_IN_GOOGLE, false);
 		updateUI(logedIn);
 
 	}
@@ -379,14 +438,13 @@ public class MainActivity extends ActionBarActivity implements
 				personPhotoUrl = currentPerson.getImage().getUrl();
 				personGooglePlusProfile = currentPerson.getUrl();
 				email = Plus.AccountApi.getAccountName(mGoogleApiClient);
-//				if (isAlreadyLoggedIn())
-//					storeSigning(personName, email, personPhotoUrl);
-				if (!(isAlreadyLoggedIn() || personGooglePlusProfile == null))
-					{
-						storeLoginStatus(true);
-						logedIn = mSharedPref.getBoolean(SIGNED_IN_GOOGLE, false);
-						
-					}
+				// if (isAlreadyLoggedIn())
+				// storeSigning(personName, email, personPhotoUrl);
+				if (!(isAlreadyLoggedIn() || personGooglePlusProfile == null)) {
+					storeLoginStatus(true);
+					logedIn = mSharedPref.getBoolean(SIGNED_IN_GOOGLE, false);
+
+				}
 				Log.d(TAG, "Name: " + personName + ", plusProfile: "
 						+ personGooglePlusProfile + ", email: " + email
 						+ ", Image: " + personPhotoUrl);
@@ -410,14 +468,13 @@ public class MainActivity extends ActionBarActivity implements
 	 * */
 	@SuppressLint("NewApi")
 	private void updateUI(boolean isSignedIn) {
-		if (isSignedIn && personName!=null&&personPhotoUrl!=null) {
-			
+		if (isSignedIn && personName != null && personPhotoUrl != null) {
+
 			if (!hasCalled) {
-				if(mSharedPref.getString(
-					MY_FAVORITE_FEED_URL, null)!=null)
+				if (mSharedPref.getString(MY_FAVORITE_FEED_URL, null) != null)
 					displayView(5);
 				else
-					displayView(4);				
+					displayView(4);
 				mDrawerFragment.setUp(R.id.fragment_left_drawer, mDrawerLayout,
 						mToolbar, isSignedIn);
 				hasCalled = true;
@@ -430,22 +487,22 @@ public class MainActivity extends ActionBarActivity implements
 		mDrawerFragment.setDrawerListener(this);
 	}
 
-//	private void storeSigning(String usernName, String email,
-//			String personPhotoUrl) {
-//		// String usernm=mSharedPref.getString(USERNAME, personName);
-//		// usernm=usernName;
-//		mEditor.remove(USERNAME).commit();
-//		mEditor.putString(USERNAME, usernName).commit();
-//		// String useremail=mSharedPref.getString(USER_EMAIL, email);
-//		// usernm=email;
-//		mEditor.remove(USERNAME).commit();
-//		mEditor.putString(USER_EMAIL, email).commit();
-//
-//		mEditor.remove(USER_PHOTO_URL).commit();
-//		mEditor.putString(USER_PHOTO_URL, personPhotoUrl).commit();
-//	}
+	// private void storeSigning(String usernName, String email,
+	// String personPhotoUrl) {
+	// // String usernm=mSharedPref.getString(USERNAME, personName);
+	// // usernm=usernName;
+	// mEditor.remove(USERNAME).commit();
+	// mEditor.putString(USERNAME, usernName).commit();
+	// // String useremail=mSharedPref.getString(USER_EMAIL, email);
+	// // usernm=email;
+	// mEditor.remove(USERNAME).commit();
+	// mEditor.putString(USER_EMAIL, email).commit();
+	//
+	// mEditor.remove(USER_PHOTO_URL).commit();
+	// mEditor.putString(USER_PHOTO_URL, personPhotoUrl).commit();
+	// }
 
- 	/**
+	/**
 	 * 
 	 */
 	private void storeLoginStatus(Boolean loginStatus) {
@@ -454,10 +511,10 @@ public class MainActivity extends ActionBarActivity implements
 		signedIn = loginStatus;
 		mEditor.remove(SIGNED_IN_GOOGLE).commit();
 		mEditor.putBoolean(SIGNED_IN_GOOGLE, signedIn).commit();
-		logedIn= mSharedPref.getBoolean(SIGNED_IN_GOOGLE, false);
-		Log.d("LOGGEDIN", "is logged in"+logedIn);
-	//	hasCalled = false;
-		
+		logedIn = mSharedPref.getBoolean(SIGNED_IN_GOOGLE, false);
+		Log.d("LOGGEDIN", "is logged in" + logedIn);
+		// hasCalled = false;
+
 	}
 
 	/**
@@ -471,9 +528,9 @@ public class MainActivity extends ActionBarActivity implements
 			mGoogleApiClient.connect();
 			storeLoginStatus(false);
 			// displayView(0);
-			hasCalled=false;
-//			mEditor.clear();
-//			mEditor.commit();
+			hasCalled = false;
+			// mEditor.clear();
+			// mEditor.commit();
 			updateUI(false);
 		}
 	}

@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jdom.Element;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import android.annotation.SuppressLint;
 
@@ -46,6 +48,20 @@ public class ParseSyndFeeds {
 				}
 			}
 		}
+		String html1 = feedItem.getContents().toString();
+		String html2 = feedItem.getDescription().toString();
+		Document doc = null;
+		String description = "";
+		if (html1 != null && html1=="[]") {
+			doc = Jsoup.parse(html1);
+			description = doc.body().text();
+		} 
+		if (html2 != null) {
+			doc = Jsoup.parse(html2);
+			description = doc.body().text();
+		} else
+			doc = null;
+
 		String Description = "";
 
 		if (feedItem.getDescription() == null) {
@@ -103,14 +119,15 @@ public class ParseSyndFeeds {
 			}
 
 		} else {
-			
+
 			feed.setImageUrl("");
 		}
 
 		feed.setAuthors(authors);
 		feed.setUrl(feedItem.getUri());
 		feed.setTitle(feedItem.getTitle());
-		feed.setPublishedOn(feedItem.getPublishedDate()!=null?feedItem.getPublishedDate().getTime():0);
+		feed.setPublishedOn(feedItem.getPublishedDate() != null ? feedItem
+				.getPublishedDate().getTime() : 0);
 		feed.setParseDescription(descCont);
 		feed.setDescription(Description);
 

@@ -31,11 +31,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.model.FeedProvider;
 import com.example.navtest.MainActivity;
 import com.example.navtest.R;
 import com.example.navtest.adapters.ExpendableListViewAdapter;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
 
 @SuppressLint("NewApi")
@@ -57,7 +60,7 @@ public class FragmentLeftDrawer extends Fragment {
 	ExpendableListViewAdapter listAdapter;
 	ExpandableListView mListView;
 	List<String> listDataHeader;
-	private static boolean mFavoriteDispl=false;
+	private static boolean mFavoriteDispl = false;
 	public static HashMap<String, List<FeedProvider>> listDataChild;
 
 	HashMap<String, FeedProvider> urlProvider;
@@ -111,13 +114,21 @@ public class FragmentLeftDrawer extends Fragment {
 
 				@Override
 				public void onClick(View v) {
-					if (!((MainActivity) getActivity()).mGoogleApiClient
-							.isConnecting()) {
-						not_logged_in.setVisibility(View.INVISIBLE);
-						progress_bar_layout.setVisibility(View.VISIBLE);
-						((MainActivity) getActivity()).signInWithGplus();
+					int status=GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
+					if (status==ConnectionResult.SUCCESS) {
+						if (!((MainActivity) getActivity()).mGoogleApiClient
+								.isConnecting()) {
+							not_logged_in.setVisibility(View.INVISIBLE);
+							progress_bar_layout.setVisibility(View.VISIBLE);
+							((MainActivity) getActivity()).signInWithGplus();
+						}
 					}
-
+					else
+						{
+							Toast.makeText(getActivity(), "Install Google Play services, To use this features",
+								Toast.LENGTH_LONG).show();
+							//((MainActivity) getActivity()).showErrorDialog(status);
+						}
 				}
 			});
 
@@ -220,7 +231,7 @@ public class FragmentLeftDrawer extends Fragment {
 		if (listDataChild != null && listDataChild.size() > 0) {
 			go_to_home.setVisibility(View.VISIBLE);
 			mAddContentLayout.setVisibility(View.GONE);
-			//((MainActivity) getActivity()).displayView(2);
+			// ((MainActivity) getActivity()).displayView(2);
 		} else {
 			go_to_home.setVisibility(View.GONE);
 			mAddContentLayout.setVisibility(View.VISIBLE);
@@ -302,13 +313,13 @@ public class FragmentLeftDrawer extends Fragment {
 			public void onDrawerClosed(View drawerView) {
 				super.onDrawerClosed(drawerView);
 
-				LinearLayout layout = (LinearLayout) drawerView
-						.findViewById(R.id.my_right_drawer_linearlayout);
-				if (layout != null && layout.VISIBLE == View.VISIBLE) {
-					drawerView.findViewById(R.id.my_right_drawer_linearlayout)
-							.setVisibility(View.INVISIBLE);
-					drawerView.invalidate();
-				}
+//				LinearLayout layout = (LinearLayout) drawerView
+//						.findViewById(R.id.my_right_drawer_linearlayout);
+//				if (layout != null && layout.VISIBLE == View.VISIBLE) {
+//					drawerView.findViewById(R.id.my_right_drawer_linearlayout)
+//							.setVisibility(View.INVISIBLE);
+//					drawerView.invalidate();
+//				}
 				getActivity().supportInvalidateOptionsMenu();
 
 			}
