@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.navtest"
+    package="com.desireaheza.newsTracker"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -21,11 +21,11 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name="com.desireaheza.newsTracker.MainActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".LaunchActivity"
+            android:name="com.desireaheza.newsTracker.LaunchActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,7 +34,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FeedItemDetailsActivity"
+            android:name="com.desireaheza.newsTracker.FeedItemDetailsActivity"
             android:label="@string/title_activity_feedDetails" >
         </activity>
 
@@ -52,11 +52,11 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".MoreFeedsActivity"
+            android:name="com.desireaheza.newsTracker.MoreFeedsActivity"
             android:label="@string/title_activity_more_feeds" >
         </activity>
         <activity
-            android:name=".ActivityPageNewsFeed"
+            android:name="com.desireaheza.newsTracker.ActivityPageNewsFeed"
             android:label="@string/title_activity_activity_page_news_feed" >
         </activity>
     </application>

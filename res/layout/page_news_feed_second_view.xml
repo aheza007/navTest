@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:padding="3dp" >
 
-    
     <ImageView
         android:id="@+id/imageView_feed_image"
         android:layout_width="match_parent"
@@ -14,7 +13,8 @@
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
         android:src="@drawable/ic_launcher" />
-<RelativeLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
@@ -25,22 +25,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="News"
-            android:textColor="@color/primary_text" />
+            android:padding="2dp"
+            android:background="#3F51B5"
+            android:textColor="#FFFFFF"/>
 
         <TextView
             android:id="@+id/textView_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="3h ago"
             android:textColor="@color/primary_text" />
     </RelativeLayout>
-    
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:background="#75000000"
         android:orientation="vertical" >
 
         <TextView
@@ -48,10 +49,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
-            android:text="Apple Says “We Hear You Taylor Swift”, Will Pay Musicians During Free Trial"
+            android:textColor="#FFFFFF"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/primary_text" />
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -63,21 +63,26 @@
                 android:id="@+id/textView_provider"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TechCruch"
-                android:textColor="@color/primary_text" />
+                android:background="#FF5722"
+                android:padding="2dp"
+                android:textColor="#FFFFFF" />
 
             <TextView
                 android:id="@+id/textView_authors"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
-                android:text="David and Monako Suarez"
-                android:textColor="@color/primary_text" />
+                android:background="@color/primary"
+                android:ellipsize="end"
+                android:padding="2dp"
+                android:singleLine="true"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#90FFC107"
             android:padding="5dp" >
 
             <Button
@@ -87,8 +92,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:text="Read more" 
-                android:textColor="@color/primary_text"/>
+                android:text="Read more"
+                android:textColor="@color/primary_text" />
 
             <ImageView
                 android:id="@+id/imageViewshare"

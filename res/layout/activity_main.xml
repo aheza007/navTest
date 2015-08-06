@@ -59,7 +59,7 @@
 
         <fragment
             android:id="@+id/fragment_left_drawer"
-            android:name="com.example.navtest.fragments.FragmentLeftDrawer"
+            android:name="com.desireaheza.newsTracker.fragments.FragmentLeftDrawer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="start" />
@@ -92,7 +92,7 @@
 
         <fragment
             android:id="@+id/fragment_right_drawer"
-            android:name="com.example.navtest.fragments.FragmentRightNavDrawer"
+            android:name="com.desireaheza.newsTracker.fragments.FragmentRightNavDrawer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="end" />

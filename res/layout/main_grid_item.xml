@@ -5,7 +5,7 @@
     android:layout_margin="2dp"
     android:orientation="vertical" >
 
-    <com.example.navtest.utils.SquareImageView
+    <com.desireaheza.newsTracker.utils.SquareImageView
         android:id="@+id/categoryIcon"
         android:layout_width="200dp"
         android:layout_height="200dp"
