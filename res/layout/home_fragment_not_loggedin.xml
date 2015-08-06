@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_login_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -7,7 +8,6 @@
         android:id="@+id/login_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/primary"
         android:orientation="vertical"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
@@ -33,7 +33,7 @@
             android:layout_marginTop="7dp"
             android:text="A single place for all your favorite lattest news"
             android:textColor="@color/primary_text" />
-
+<!-- 
         <Button
             android:id="@+id/buttonGoogle_login"
             android:layout_width="match_parent"
@@ -43,6 +43,14 @@
             android:layout_marginTop="50dp"
             android:background="#3369E8"
             android:text="Login with Google" />
+        -->
+         <com.google.android.gms.common.SignInButton
+            android:id="@+id/btn_sign_in"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewSubMotto"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp" />
 <!--  
         <Button
             android:id="@+id/buttonFacebook_login"
@@ -55,11 +63,26 @@
             android:text="Login with Facebook" /> -->
     </RelativeLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-         style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:layout_gravity="center"/>
+     <RelativeLayout
+        android:id="@+id/progress_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+         >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toRightOf="@+id/progressBar"
+            android:textColor="@color/primary_text"
+            android:text="Signing in" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
 
 </FrameLayout>

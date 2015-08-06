@@ -1,5 +1,6 @@
 package com.desireaheza.newsTracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,8 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
-
 import com.desireaheza.newsTracker.adapters.SimpleAdapter;
+import com.desireaheza.newsTracker.adapters.SimpleAdapter.onGridCardItemClick;
+import com.desireaheza.newsTracker.model.Feed;
 
 public class MoreFeedsActivity extends ActionBarActivity {
 
@@ -41,13 +43,29 @@ public class MoreFeedsActivity extends ActionBarActivity {
 		mAdapter = new SimpleAdapter(this.getApplicationContext(),
 				R.layout.long_list_favorite_item_view, MainActivity.feeds);
 		mRecyclerView.setAdapter(mAdapter);
+		mAdapter.setOnGridItemClickListener(new onGridCardItemClick() {
+			
+			@Override
+			public void gridItemClickListener(View v, int position) {
+				Intent intent = new Intent(MoreFeedsActivity.this,
+						ActivityPageNewsFeed.class);
+				Bundle bundle=new Bundle();
+				Feed feed=(Feed)v.getTag();
+				if(pageTitle!="[]"&&pageTitle!=""&&pageTitle!=null)
+					feed.setFeedProviderName(pageTitle);
+				bundle.putParcelable("FEED_ITEM",feed );
+				intent.putExtras(bundle);
+				startActivity(intent);
+				
+			}
+		});
 		mProgressBar.setVisibility(View.GONE);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.more_feeds, menu);
+	//	getMenuInflater().inflate(R.menu.more_feeds, menu);
 		return true;
 	}
 

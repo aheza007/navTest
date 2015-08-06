@@ -75,7 +75,7 @@ public class MainActivity extends ActionBarActivity implements
 	SharedPreferences.Editor mEditor;
 	// volley request queue
 	public RequestQueue mRequestQueue;
-
+	FragmentManager mFragmentManager; 
 	public static List<Feed> feeds = new ArrayList<Feed>();
 
 	// ImageLoader
@@ -289,36 +289,38 @@ public class MainActivity extends ActionBarActivity implements
 		Fragment fragment = null;
 		Boolean canBackStack = true;
 		String tag = "";
+		String title="";
 		switch (position) {
 		case 0:
 			fragment = new HomeFragment();
-			// title = getString(R.string.title_home);
+			title = "Home";
 			tag = "HomeFragment";
 			canBackStack = false;
 			break;
 		case 1:
 			fragment = new FragmentFeedList();
 			tag = "FragmentFeedList";
+			title = mSelectedProvider.getCategoryName()+"\\"+mSelectedProvider.getProviderName();
 			break;
 		case 2:
 			fragment = new FragmentHomeFavorite();
-			// title = getString(R.string.title_fragment_home_favorite);
+			 title = "Home - Favorite News";
 			tag = "FragmentHomeFavorite";
 			break;
 		case 3:
 			fragment = new FragmentExploreNews();
-			// title = getString(R.string.title_fragment_home_favorite);
+			title = "Home - Explore News";
 			tag = "FragmentExploreNews";
 			break;
 		case 4:
 			fragment = new FragmentHomeNoFavorites();
-			// title = getString(R.string.title_fragment_home_favorite);
+			title = "Home";
 			tag = "FragmentHomeNoFavorites";
 			canBackStack = false;
 			break;
 		case 5:
 			fragment = new FragmentMyFavoriteNews();
-			// title = getString(R.string.title_fragment_home_favorite);
+			title = "Home - My Favorite News";
 			tag = "FragmentMyFavoriteNews";
 			canBackStack = false;
 			break;
@@ -327,10 +329,11 @@ public class MainActivity extends ActionBarActivity implements
 		}
 
 		if (fragment != null) {
-			FragmentManager fragmentManager = getSupportFragmentManager();
-			FragmentTransaction fragmentTransaction = fragmentManager
+			getSupportActionBar().setTitle(title);
+			mFragmentManager = getSupportFragmentManager();
+			FragmentTransaction fragmentTransaction = mFragmentManager
 					.beginTransaction();
-			fragmentTransaction.replace(R.id.container_body, fragment);
+			fragmentTransaction.replace(R.id.container_body, fragment,tag);
 			// if (canBackStack)
 			// fragmentTransaction.addToBackStack(null);
 			fragmentTransaction.commit();
@@ -390,11 +393,16 @@ public class MainActivity extends ActionBarActivity implements
 				if (result != null
 						&& result.SIGN_IN_REQUIRED == ConnectionResult.SIGN_IN_REQUIRED
 						&& result.CANCELED == ConnectionResult.CANCELED) {
+					HomeFragment homeFragment=(HomeFragment)mFragmentManager.findFragmentByTag("HomeFragment");
+					if(homeFragment!=null&&homeFragment.mProgressBarLayout.getVisibility()==View.VISIBLE)
+					{	
+						homeFragment.mProgressBarLayout.setVisibility(View.INVISIBLE);
+						homeFragment.mLoginLayout.setVisibility(View.VISIBLE);;
+					}
 					handleProgressBarInLeftDrawer();
 				}
 			}
 		}
-
 	}
 
 	@Override

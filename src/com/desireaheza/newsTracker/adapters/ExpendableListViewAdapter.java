@@ -112,6 +112,7 @@ public class ExpendableListViewAdapter extends BaseExpandableListAdapter {
                 .findViewById(R.id.lblListItem);
  
         txtListChild.setText(provider.getProviderName());
+        convertView.setTag(provider);
         return convertView;
 	}
 

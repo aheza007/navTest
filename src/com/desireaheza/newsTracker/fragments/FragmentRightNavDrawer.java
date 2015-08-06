@@ -87,11 +87,12 @@ public class FragmentRightNavDrawer extends Fragment {
 
 			// load slide menu items
 			if (toolbar != null) {
-				// ((ActionBarActivity)getActivity()).setSupportActionBar(mToolbar);
-				ImageView icon = new ImageView(getActivity());
-				// icon.setImageDrawable(getActivity().getDrawable(
-				// R.drawable.ic_action_search));
-				toolbar.addView((View) icon);
+				LinearLayout toolBarView = (LinearLayout) LayoutInflater
+						.from(getActivity()).inflate(
+								R.layout.title_feed_category_grid,
+								toolbar, false);
+				((TextView)toolBarView.findViewById(R.id.lblListItem)).setText("News Categories");
+				toolbar.addView((View) toolBarView);
 			}
 
 			toolbar.setTitle(null);

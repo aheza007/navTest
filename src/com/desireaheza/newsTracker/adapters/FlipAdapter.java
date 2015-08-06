@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.Html;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -111,7 +112,11 @@ public class FlipAdapter extends BaseAdapter implements OnClickListener {
 						+ feedItem.getDescription());
 		String ImageUrl = feedItem.getImageUrl();
 		String descCont = feedItem.getParseDescription();
-		holder.textView_time.setText("" + feedItem.getPublishedOn());
+		String nowtime=""+System.currentTimeMillis();
+		String feedTime=""+feedItem.getPublishedOn();
+		
+		CharSequence time=DateUtils.getRelativeTimeSpanString( feedItem.getPublishedOn(),System.currentTimeMillis(), 0);
+		holder.textView_time.setText(time);
 		holder.textView_category.setText(mProvider.getCategoryName());
 		holder.textView_provider.setText(mProvider.getProviderName());
 		if(feedItem.getAuthors().length()>0)

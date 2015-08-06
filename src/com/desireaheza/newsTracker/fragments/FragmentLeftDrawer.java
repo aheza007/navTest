@@ -26,6 +26,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -285,6 +286,21 @@ public class FragmentLeftDrawer extends Fragment {
 
 				// setting list adapter
 				mListView.setAdapter(listAdapter);
+				
+				mListView.setOnChildClickListener(new OnChildClickListener() {
+					
+					@Override
+					public boolean onChildClick(ExpandableListView parent, View view,
+							int groupPosition, int childPosition, long id) {
+						((MainActivity)getActivity()).mSelectedProvider = (FeedProvider)view.getTag();								
+						((MainActivity) getActivity()).closeDrawer();
+						((MainActivity) getActivity())
+								.displayView(1);
+						return true;
+					}
+				});
+
+				
 			}
 		} catch (Exception e) {
 

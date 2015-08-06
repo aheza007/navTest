@@ -8,6 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.format.DateUtils;
+import android.text.method.DateTimeKeyListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -68,9 +71,7 @@ public class ActivityPageNewsFeed extends ActionBarActivity {
 					mFeed.getFeedProviderCategory() + "-"
 							+ mFeed.getFeedProviderName());
 		} else if (mFeed.getFeedProviderName() != null)
-			getSupportActionBar().setTitle(
-					mFeed.getFeedProviderCategory() + "-"
-							+ mFeed.getFeedProviderName());
+			getSupportActionBar().setTitle(mFeed.getFeedProviderName());
 		super.onResume();
 	}
 
@@ -134,19 +135,26 @@ public class ActivityPageNewsFeed extends ActionBarActivity {
 
 	private void displayItem() {
 
-		if (mFeed.getFeedProviderCategory() == null) {
-			mTextView_category.setVisibility(View.INVISIBLE);
-
-		} else if (mFeed.getFeedProviderName() == null)
-			mTextView_provider.setVisibility(View.INVISIBLE);
-		else {
+		if (mFeed.getFeedProviderCategory() != null && mFeed.getFeedProviderName()!=null) {
 			mTextView_category.setVisibility(View.VISIBLE);
 			mTextView_provider.setVisibility(View.VISIBLE);
 			mTextView_category.setText(mFeed.getFeedProviderCategory());
 			mTextView_provider.setText(mFeed.getFeedProviderName());
-		}
-		mTextView_time.setText("" + mFeed.getPublishedOn());
 
+		} 
+		else if (mFeed.getFeedProviderCategory() == null &&mFeed.getFeedProviderName()!=null){
+			mTextView_category.setVisibility(View.INVISIBLE);
+			mTextView_provider.setVisibility(View.VISIBLE);
+			mTextView_provider.setText(mFeed.getFeedProviderName());
+		}
+		else {
+			mTextView_category.setVisibility(View.INVISIBLE);
+			mTextView_provider.setVisibility(View.INVISIBLE);
+		}
+		CharSequence time=DateUtils.getRelativeTimeSpanString( mFeed.getPublishedOn(), System.currentTimeMillis(),0);
+			
+		mTextView_time.setText(time);
+		
 		if (mFeed.getAuthors().length() > 0)
 			mTextView_authors.setText("by " + mFeed.getAuthors());
 		else
@@ -161,8 +169,8 @@ public class ActivityPageNewsFeed extends ActionBarActivity {
 		mTextView_feed_title.setText(mFeed.getTitle());
 		// mTextView_provider.settext(mFeed.get)
 		mTextView_authors.setText(mFeed.getAuthors());
-		mTextView_feed_description.setText(mFeed.getParseDescription());
-
+		//mTextView_feed_description.setText(mFeed.getParseDescription());
+		mTextView_feed_description.setText(trimTrailingWhitespace(Html.fromHtml(mFeed.getParseDescription())));
 	}
 
 	private void loadImage(ImageView pImageView_feed_image, String ImageUrl)
@@ -175,10 +183,24 @@ public class ActivityPageNewsFeed extends ActionBarActivity {
 				.into(pImageView_feed_image);
 	}
 
+	public static CharSequence trimTrailingWhitespace(CharSequence source) {
+
+		if (source == null)
+			return "";
+
+		int i = source.length();
+
+		// loop back to the first non-whitespace character
+		while (--i >= 0 && Character.isWhitespace(source.charAt(i))) {
+		}
+
+		return source.subSequence(0, i + 1);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_page_news_feed, menu);
+	//	getMenuInflater().inflate(R.menu.activity_page_news_feed, menu);
 		return true;
 	}
 
